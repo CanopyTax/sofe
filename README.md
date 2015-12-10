@@ -2,7 +2,7 @@
 Service Oriented Front-end
 
 ## Motivation for Front-end Services
-1. Easier to organize and scale team
+1. Easier to organize and scale teams
 2. Promotes culture of ownership, autonomy, responsibility and accountability
 3. Granular release planning
 4. High trust, low processes
