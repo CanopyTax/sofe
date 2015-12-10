@@ -29,7 +29,7 @@ Sofe makes the resolution process flexible and configurable.
 
 #### Automatic Resolution
 By default, sofe will resolve services by assuming that the name corresponds to an npm package. If the name exists on npm,
-sofe will load http://registry.npmjs.org/!package-name! and find a `sofe` attribute within the `package.json` file.
+sofe will load http://registry.npmjs.org/auth-service and find a `sofe` attribute within the `package.json` file.
 The `sofe` attribute should be an object with a `url` attribute which tells sofe where to get the service deployable.
 
 For example, a `canopy-auth` service could automatically be resolved if `canopy-auth` was published to npm with the following
