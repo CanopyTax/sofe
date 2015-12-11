@@ -1,4 +1,4 @@
-System.import('auth-remote!sofe.js')
-	.then(function(someService) {
-		console.log(someService.getSession());
+System.import('auth!sofe.js')
+	.then(function(auth) {
+		console.log(auth.getSession());
 	})

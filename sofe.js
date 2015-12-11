@@ -4,7 +4,7 @@ var cachedRemoteManifest;
 function getRegistryUrl() {
 	var config = System.sofe;
 	if (config && config.registry) return config.registry;
-	else return 'http://cors.maxogden.com/https://registry.npmjs.org/';
+	else return 'http://cors.maxogden.com/https://registry.npmjs.org';
 }
 
 function getServiceName(load) {
@@ -57,8 +57,10 @@ function getUrlFromRegistry(service) {
 				return resp.json();
 			})
 			.then(function(json) {
-				if (json && json.sofe && json.sofe.url) {
-					resolve(json.sofe.url);
+				let sofe = json.versions[json['dist-tags'].latest].sofe;
+
+				if (sofe && sofe.url) {
+					resolve(sofe.url);
 				} else {
 					reject('Invalid service on registry. Needs a sofe parameter. Check service: ' + service);
 				}

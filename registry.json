@@ -1,7 +1,0 @@
-{
-	"sofe": {
-		"manifest": {
-			"auth-remote": "http://localhost:5555/test-services/auth.js"
-		}
-	}
-}
