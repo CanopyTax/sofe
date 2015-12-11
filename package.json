@@ -1,0 +1,22 @@
+{
+  "name": "sofe",
+  "version": "0.0.1",
+  "description": "Service Oriented Front-end",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "npm run test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CanopyTax/sofe.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/CanopyTax/sofe/issues"
+  },
+  "homepage": "https://github.com/CanopyTax/sofe#readme",
+  "devDependencies": {
+    "systemjs": "0.19.6"
+  }
+}
