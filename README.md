@@ -45,6 +45,15 @@ For example, a `canopy-auth` service could automatically be resolved if `canopy-
 ```
 Automatic resolution is convenient because it enables service auto discovery. Simply deploy the service to npm and a deployable file to a CDN and automatically any application can resolve and load the service. The downside is that to for every application that loads the service (and for each other service), npm always has to be checked before the service can actually be loaded. A convenient CDN for automatic resolution is https://npmcdn.com
 
+Configure a custom npm registry:
+```javascript
+System.config({
+  sofe: {
+    registry: 'https://registry.internal.canopytax.com'
+  }
+});
+```
+
 #### Manifest Resolution
 Instead of automatically resolving services, provide a manifest map of services with associated service deployable locations.
 Hard code the manifest within the System.js config:
