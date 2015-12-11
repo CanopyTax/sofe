@@ -1,11 +1,21 @@
 let cachedRemoteManifest;
 
+/**
+ * Asynchronously find a manifest for resolving sofe services. The manifest is a simple
+ * map where key values represent unique services and the values represent a URL
+ * to load the service. If there is no available manifest, sofe will default to
+ * querying npm for service resolution.
+ *
+ * @param {Object} config the sofe configuration object
+ * @return {Promise} A promise which is resolved with a service manifest.
+ */
 export function getManifest(config) {
 	return new Promise((resolve, reject) => {
 		if (config.manifest) {
 			return resolve(config.manifest);
 		}
 
+		// Only request a remote manifest file once.
 		if (cachedRemoteManifest) {
 			return resolve(cachedRemoteManifest);
 		}
@@ -24,6 +34,7 @@ export function getManifest(config) {
 				.catch(() => reject('Invalid manifest: must be parseable JSON'));
 		}
 
-		return null;
+		// Resolve with no manifest if there is no config.manifest or config.manifestUrl
+		resolve(null);
 	})
 }
