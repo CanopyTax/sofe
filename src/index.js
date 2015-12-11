@@ -1,6 +1,6 @@
-import { getServiceName } from './utils';
-import { getUrlFromRegistry } from './registries';
-import { getManifest } from './manifest';
+import { getServiceName } from './utils.js';
+import { getUrlFromRegistry } from './registries.js';
+import { getManifest } from './manifest.js';
 
 const config = System.sofe;
 
