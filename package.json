@@ -4,7 +4,10 @@
   "description": "Service Oriented Front-end",
   "main": "lib/index.js",
   "scripts": {
-    "test": "npm run test"
+    "test": "npm run test",
+		"build": "babel src --out-dir lib",
+		"watch": "babel -w src --out-dir lib",
+		"clean": "rm -r lib"
   },
   "repository": {
     "type": "git",
@@ -17,6 +20,11 @@
   },
   "homepage": "https://github.com/CanopyTax/sofe#readme",
   "devDependencies": {
+    "babel-cli": "6.3.17",
+    "babel-preset-es2015": "6.3.13",
     "systemjs": "0.19.6"
-  }
+  },
+	"files": [
+		"lib", "src"
+	]
 }
