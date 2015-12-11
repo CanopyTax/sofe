@@ -1,4 +1,4 @@
-var urls = require('cpr-select!lib/index.js');
+var urls = require('cpr-select!dist/sofe.js');
 
 var session = {
 	id: 1111,

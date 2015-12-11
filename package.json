@@ -2,7 +2,7 @@
   "name": "sofe",
   "version": "0.0.1",
   "description": "Service Oriented Front-end",
-  "main": "lib/index.js",
+  "main": "dist/sofe.js",
   "scripts": {
     "test": "npm run test",
 		"build": "babel src --out-dir lib && npm run rollup",

@@ -1,4 +1,4 @@
-System.import('auth!lib/index.js')
+System.import('auth!dist/sofe.js')
 	.then(function(auth) {
 		console.log(auth.getSession());
 	})
