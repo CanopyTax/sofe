@@ -5,9 +5,9 @@
   "main": "lib/index.js",
   "scripts": {
     "test": "npm run test",
-		"build": "babel src --out-dir lib",
-		"watch": "babel -w src --out-dir lib",
-		"clean": "rm -r lib"
+		"build": "babel src --out-dir lib && npm run rollup",
+		"rollup": "rollup src/index.js -f cjs -o dist/sofe.js",
+    "clean": "rm -r lib"
   },
   "repository": {
     "type": "git",
@@ -22,9 +22,11 @@
   "devDependencies": {
     "babel-cli": "6.3.17",
     "babel-preset-es2015": "6.3.13",
+    "rollup": "0.21.2",
     "systemjs": "0.19.6"
   },
-	"files": [
-		"lib", "src"
-	]
+  "files": [
+    "dist",
+    "src"
+  ]
 }
