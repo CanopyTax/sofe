@@ -17,12 +17,18 @@ export function getUrlFromRegistry(service, config) {
 		fetch(registryUrl + '/' + service)
 			.then((resp) => resp.json())
 			.then((json) => {
-				let sofe = json.versions[json['dist-tags'].latest].sofe;
-
-				if (sofe && sofe.url) {
-					resolve(sofe.url);
+				if (json.sofe) {
+					// The registry is a simple sofe registry
+					resolve(json.sofe.url);
 				} else {
-					reject(`Invalid service on registry. Needs a sofe parameter. Check service: ${service}`);
+					// The registry is an NPM registry
+					let sofe = json.versions[json['dist-tags'].latest].sofe;
+
+					if (sofe && sofe.url) {
+						resolve(sofe.url);
+					} else {
+						reject(`Invalid service on registry. Needs a sofe parameter. Check service: ${service}`);
+					}
 				}
 			})
 			.catch(() => reject(`Invalid registry response for service: ${service}`))

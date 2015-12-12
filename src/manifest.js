@@ -32,9 +32,9 @@ export function getManifest(config) {
 					}
 				})
 				.catch(() => reject('Invalid manifest: must be parseable JSON'));
+		} else {
+			// Resolve with no manifest if there is no config.manifest or config.manifestUrl
+			resolve(null);
 		}
-
-		// Resolve with no manifest if there is no config.manifest or config.manifestUrl
-		resolve(null);
 	})
 }
