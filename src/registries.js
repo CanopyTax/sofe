@@ -1,6 +1,8 @@
+const CORS_URL = 'http://cors.maxogden.com/';
+
 function getRegistryUrl(config) {
 	if (config && config.registry) return config.registry;
-	else return 'http://cors.maxogden.com/https://registry.npmjs.org';
+	else return `${CORS_URL}https://registry.npmjs.org`;
 }
 
 /**
@@ -22,12 +24,15 @@ export function getUrlFromRegistry(service, config) {
 					resolve(json.sofe.url);
 				} else {
 					// The registry is an NPM registry
-					let sofe = json.versions[json['dist-tags'].latest].sofe;
+					const version = json['dist-tags'].latest;
+					const pkg = json.versions[version];
 
-					if (sofe && sofe.url) {
-						resolve(sofe.url);
+					if (pkg.sofe && pkg.sofe.url) {
+						resolve(pkg.sofe.url);
 					} else {
-						reject(`Invalid service on registry. Needs a sofe parameter. Check service: ${service}`);
+						resolve(
+							`https://npmcdn.com/${service}@${version}`
+						);
 					}
 				}
 			})
