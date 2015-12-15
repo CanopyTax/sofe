@@ -1,4 +1,4 @@
-import { getServiceName, resolvePath } from './utils.js';
+import { getServiceName, resolvePathFromService } from './utils.js';
 import { getUrlFromRegistry } from './registries.js';
 import { getManifest } from './manifest.js';
 
@@ -8,12 +8,18 @@ const systemNormalize = System.normalize;
 
 let serviceMap = {};
 
+/**
+ * Override the default System.normalize
+ *
+ * This is done to recognize when we are loading a dependency of a sofe service and
+ * allow the dependency to load relative to the parent service.
+ */
 System.normalize = function(name, parentName, parentAddress) {
 	if (parentName && parentName.match(/sofe/))
 		if (name.match(/sofe/)) {
 			return systemNormalize.call(this, name, parentName, parentAddress);
 		} else {
-			let resolution = resolvePath(serviceMap, name, parentName);
+			let resolution = resolvePathFromService(serviceMap, name, parentName);
 			return resolution;
 		}
 		else

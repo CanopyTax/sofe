@@ -15,7 +15,18 @@ export function getServiceName(address) {
 	return service;
 }
 
-export function resolvePath(services, name, parentName) {
+/**
+ * Try and resolve a file URL from a service. This allows a service to load a dependency
+ * that is a relative path on its hosted location.
+ *
+ * @param {Object} services A map of identified and registered services
+ * @param {String} name The name of the service that we are resolving
+ * @param {String} parentName The parent which should be a sofe service with a resolved
+ *                 path within the services argument.
+ *
+ * @return {String} The correct URL to load the given file name.
+ */
+export function resolvePathFromService(services, name, parentName) {
 
 	let parentAddress = getServiceResolution(services, parentName);
 
