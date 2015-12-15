@@ -1,8 +1,24 @@
-import { getServiceName } from './utils.js';
+import { getServiceName, resolvePath } from './utils.js';
 import { getUrlFromRegistry } from './registries.js';
 import { getManifest } from './manifest.js';
 
 const config = System.sofe;
+
+const systemNormalize = System.normalize;
+
+let serviceMap = {};
+
+System.normalize = function(name, parentName, parentAddress) {
+	if (parentName && parentName.match(/sofe/))
+		if (name.match(/sofe/)) {
+			return systemNormalize.call(this, name, parentName, parentAddress);
+		} else {
+			let resolution = resolvePath(serviceMap, name, parentName);
+			return resolution;
+		}
+		else
+			return systemNormalize.call(this, name, parentName, parentAddress);
+}
 
 /**
  * Override SystemJS loader locate method
@@ -20,10 +36,14 @@ export function locate(load) {
 				// First try and resolve the service with the manifest,
 				// otherwise resolve by requesting the registry
 				if (manifest && manifest[service]) {
+					serviceMap[load.name] = manifest[service];
 					resolve(manifest[service]);
 				} else {
 					getUrlFromRegistry(service, config)
-						.then((url) => resolve(url))
+						.then((url) => {
+							serviceMap[load.name] = url;
+							resolve(url);
+						})
 						.catch((error) => {
 							throw new Error(error)
 						});

@@ -5,26 +5,26 @@
   "main": "dist/sofe.js",
   "scripts": {
     "test": "npm run test",
-		"build": "babel src --out-dir lib && npm run rollup",
-		"rollup": "rollup src/index.js -f cjs -o dist/sofe.js",
+    "build": "babel src --out-dir lib && node build.js",
+    "rollup": "rollup src/index.js -f cjs -o dist/sofe.js",
     "clean": "rm -r lib",
-		"prepublish": "npm run build"
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/CanopyTax/sofe.git"
   },
-	"contributors": [
-		{
-			"name" : "Bret Little",
-			"email" : "bret.little@gmail.com",
-			"url" : "https://bretlittle.surge.sh"
-		},
-		{
-			"name" : "Joel Denning",
-			"email" : "joel.denning@canopytax.com"
-		}
-	],
+  "contributors": [
+    {
+      "name": "Bret Little",
+      "email": "bret.little@gmail.com",
+      "url": "https://bretlittle.surge.sh"
+    },
+    {
+      "name": "Joel Denning",
+      "email": "joel.denning@canopytax.com"
+    }
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/CanopyTax/sofe/issues"
@@ -34,10 +34,15 @@
     "babel-cli": "6.3.17",
     "babel-preset-es2015": "6.3.13",
     "rollup": "0.21.2",
+    "rollup-plugin-commonjs": "1.4.0",
+    "rollup-plugin-npm": "1.1.0",
     "systemjs": "0.19.6"
   },
   "files": [
     "dist",
     "src"
-  ]
+  ],
+  "dependencies": {
+    "path-browserify": "0.0.0"
+  }
 }
