@@ -60,3 +60,9 @@ export function locate(load) {
 			});
 	})
 }
+
+window.sofe = {
+  clearCache: function() {
+    serviceMap = {};
+  }
+}
