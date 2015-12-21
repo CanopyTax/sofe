@@ -3,7 +3,7 @@ var npm = require('rollup-plugin-npm');
 var commonjs = require('rollup-plugin-commonjs');
 
 rollup({
-	entry: './lib/index.js',
+	entry: './lib/sofe.js',
   plugins: [
     npm({
       // use "jsnext:main" if possible

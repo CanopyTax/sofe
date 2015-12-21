@@ -4,6 +4,14 @@
 module.exports = function(config) {
   config.set({
 
+    // plugins: [
+    //   'karma-chrome-launcher',
+    //   'karma-phantomjs-launcher',
+    //   'karma-jasmine',
+    //   'karma-coverage',
+    //   'karma-babel-preprocessor'
+    // ],
+
     // base path that will be used to resolve all patterns (eg. files, exclude)
     basePath: '',
 
@@ -15,9 +23,11 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      { pattern: 'test/**/*.*', watched: true, included: false, served: true, nocache: true },
-      { pattern: 'dist/**/*.*', watched: true, included: false, served: true, nocache: true },
       'node_modules/systemjs/dist/system.src.js',
+      { pattern: 'node_modules/path-browserify/**/*.js', watched: false, included: false, served: true},
+      { pattern: 'src/**/*.*', watched: true, included: false, served: true},
+      { pattern: 'test/**/*.*', watched: true, included: false, served: true},
+      { pattern: 'dist/**/*.*', watched: true, included: false, served: true},
       'test/**/*.test.js'
     ],
 
@@ -30,13 +40,20 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
+      'src/**/*.*': ['babel', 'coverage']
     },
 
+    'babelPreprocessor': {
+      options: {
+        presets: ['es2015', 'stage-0'],
+        sourceMap: 'inline'
+      }
+    },
 
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['progress'],
+    reporters: ['progress', 'coverage'],
 
 
     // web server port
@@ -67,6 +84,22 @@ module.exports = function(config) {
 
     // Concurrency level
     // how many browser should be started simultanous
-    concurrency: Infinity
+    concurrency: Infinity,
+
+    coverageReporter: {
+      // configure the reporter to use isparta for JavaScript coverage
+      // Only on { "karma-coverage": "douglasduteil/karma-coverage#next" }
+      instrumenters: { isparta : require('isparta') },
+      instrumenter: {
+        'src/**/*.js': 'isparta'
+      },
+      instrumenterOptions: {
+        isparta: { babel : { presets: ['es2015', 'stage-0'] } }
+      }
+    },
+
+    proxies: {
+      '/path-browserify': 'http://localhost:9876/base/node_modules/path-browserify/index.js'
+    }
   })
 }

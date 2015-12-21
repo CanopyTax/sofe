@@ -15,7 +15,7 @@ describe('static resolution', function() {
       }
     });
 
-    System.import('simple!base/dist/sofe.js')
+    System.import('simple!/base/src/sofe.js')
       .then(function(auth) {
         expect(auth()).toBe('mumtaz');
         run();
@@ -33,8 +33,8 @@ describe('static resolution', function() {
     });
 
     Promise.all([
-      System.import('simple!base/dist/sofe.js'),
-      System.import('simple2!base/dist/sofe.js')
+      System.import('simple!/base/src/sofe.js'),
+      System.import('simple2!/base/src/sofe.js')
     ]).then(function(resp) {
       expect(resp[0]()).toBe('mumtaz');
       expect(resp[1]()).toBe('kwayis');
@@ -53,8 +53,8 @@ describe('static resolution', function() {
     });
 
     Promise.all([
-      System.import('simple!base/dist/sofe.js'),
-      System.import('simple2!base/dist/sofe.js')
+      System.import('simple!/base/src/sofe.js'),
+      System.import('simple2!/base/src/sofe.js')
     ]).then(function(resp) {
       expect(resp[0]()).toBe('mumtaz');
       expect(resp[1]()).toBe('kwayis');
@@ -72,7 +72,7 @@ describe('static resolution', function() {
       }
     });
 
-    System.import('simpleDependency!base/dist/sofe.js')
+    System.import('simpleDependency!/base/src/sofe.js')
       .then(function(simple) {
         expect(simple().data).toBe('mumtaz');
         run();
@@ -90,25 +90,41 @@ describe('static resolution', function() {
       }
     });
 
-    System.import('deep!base/dist/sofe.js')
+    System.import('deep!/base/src/sofe.js')
       .then(function(deep) {
         expect(deep().data).toBe('mumtaz');
         run();
       });
   });
 
+  // it('should resolve relative dependencies inside services', function(run) {
+  //   System.config({
+  //     sofe: {
+  //       manifest: {
+  //         bret: root + '/test/services/relativeDependency.js'
+  //       }
+  //     }
+  //   });
+  //
+  //   System.import('bret!/base/src/sofe.js')
+  //     .then(function(relative) {
+  //       expect(relative().data).toBe('mumtaz');
+  //       run();
+  //     });
+  // });
+
   it('should resolve relative dependencies inside services', function(run) {
     System.config({
       sofe: {
         manifest: {
-          relative: root + '/test/services/relativeDependency.js'
+          deep: root + '/test/services/relativeDependency.js'
         }
       }
     });
 
-    System.import('relative!base/dist/sofe.js')
-      .then(function(relative) {
-        expect(relative().data).toBe('mumtaz');
+    System.import('deep!/base/src/sofe.js')
+      .then(function(deep) {
+        expect(deep().data).toBe('mumtaz');
         run();
       });
   });
@@ -122,7 +138,7 @@ describe('static resolution', function() {
       }
     });
 
-    System.import('deep!base/dist/sofe.js')
+    System.import('deep!/base/src/sofe.js')
       .then(function(deep) {
         expect(deep().data).toBe('mumtaz');
         run();
@@ -130,7 +146,7 @@ describe('static resolution', function() {
   });
 
   it('should throw an error for an undefined service', function(run) {
-    System.import('derp!base/dist/sofe.js')
+    System.import('derp!/base/src/sofe.js')
       .catch(function(error) {
         expect(error.message.indexOf('404')).not.toBe(-1);
         run();
