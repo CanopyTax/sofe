@@ -122,9 +122,9 @@ describe('static resolution', function() {
       }
     });
 
-    system.import('derp!/base/src/sofe.js')
+    system.import('DoesNotExist!/base/src/sofe.js')
       .catch(function(error) {
-        expect(error.message.indexOf('404')).not.toBe(-1);
+        expect(error.message.split('\n')[0]).toBe('Invalid registry response for service: DoesNotExist');
         run();
       });
   });

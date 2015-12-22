@@ -23,6 +23,9 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
+      'node_modules/babel-polyfill/dist/polyfill.js',
+      'node_modules/whatwg-fetch/fetch.js',
+      'node_modules/systemjs/dist/system-polyfills.js',
       'node_modules/systemjs/dist/system.src.js',
       { pattern: 'node_modules/path-browserify/**/*.js', watched: false, included: false, served: true},
       { pattern: 'src/**/*.*', watched: true, included: false, served: true},
@@ -44,8 +47,7 @@ module.exports = function(config) {
 
     'babelPreprocessor': {
       options: {
-        presets: ['es2015', 'stage-0'],
-        sourceMap: 'inline'
+        presets: ['es2015', 'stage-0']
       }
     },
 
@@ -74,7 +76,7 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['Chrome'],
+    browsers: ['PhantomJS'],
 
 
     // Continuous Integration mode
@@ -90,11 +92,19 @@ module.exports = function(config) {
       // Only on { "karma-coverage": "douglasduteil/karma-coverage#next" }
       instrumenters: { isparta : require('isparta') },
       instrumenter: {
-        'src/**/*.js': 'isparta'
+        'src/**/*.*': 'isparta'
       },
       instrumenterOptions: {
-        isparta: { babel : { presets: ['es2015', 'stage-0'] } }
-      }
+        isparta: { babel : { presets: 'es2015' } }
+      },
+      reporters: [
+        {
+          type: 'text-summary'
+        },
+        {
+          type: 'json'
+        }
+      ]
     },
 
     proxies: {

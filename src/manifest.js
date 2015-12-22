@@ -11,9 +11,7 @@ let cachedRemoteManifest;
  */
 export function getManifest(config) {
 	return new Promise((resolve, reject) => {
-		if (config.manifest) {
-			return resolve(config.manifest);
-		}
+    let staticManifest = config.manifest || {};
 
 		// Only request a remote manifest file once.
 		if (cachedRemoteManifest) {
@@ -25,8 +23,11 @@ export function getManifest(config) {
 				.then((resp) => resp.json())
 				.then((json) => {
 					if (json && json.sofe && json.sofe.manifest) {
-						cachedRemoteManifest = window.sofe.cachedRemoteManifest = json.sofe.manifest;
-						resolve(json.sofe.manifest);
+						cachedRemoteManifest = window.sofe.cachedRemoteManifest = { 
+              ...json.sofe.manifest, ...staticManifest
+            };
+
+						resolve(cachedRemoteManifest);
 					} else {
 						reject(
               new Error('Invalid manifest JSON: must include a sofe attribute with a manifest object')
@@ -38,7 +39,7 @@ export function getManifest(config) {
         ));
 		} else {
 			// Resolve with no manifest if there is no config.manifest or config.manifestUrl
-			resolve(null);
+			resolve(staticManifest);
 		}
 	})
 }

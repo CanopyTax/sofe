@@ -1,6 +1,6 @@
 var root = 'http://localhost:' + window.location.port + '/base';
 
-describe('remote resolution', function() {
+describe('registry resolution', function() {
 
   var system;
 

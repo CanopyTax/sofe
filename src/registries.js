@@ -15,10 +15,16 @@ function getRegistryUrl(config) {
  */
 export function getUrlFromRegistry(service, config) {
 	return new Promise(function(resolve, reject) {
-		let registryUrl = getRegistryUrl(config);
+    const requestUrl = getRegistryUrl(config) + '/' + service;
 
-		fetch(registryUrl + '/' + service)
-			.then((resp) => resp.json())
+		fetch(requestUrl)
+			.then((resp) => {
+        if (resp.status >= 200 && resp.status < 300) {
+          return resp.json();
+        } else {
+          return Promise.reject(new Error(resp.statusText || resp.status));
+        }
+      })
 			.then((json) => {
 				if (json.sofe) {
 					// The registry is a simple sofe registry
@@ -37,6 +43,6 @@ export function getUrlFromRegistry(service, config) {
 					}
 				}
 			})
-			.catch(() => reject(new Error(`Invalid registry response for service: ${service}`)))
+			.catch(() => reject(new Error(`Invalid registry response for service: ${service}\nRequest:${requestUrl}`)))
 	});
 }
