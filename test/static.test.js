@@ -1,13 +1,19 @@
 var root = 'http://localhost:' + window.location.port + '/base';
 
 describe('static resolution', function() {
+
+  var system;
+
+  beforeEach(function() {
+    system = new System.constructor();
+  });
+
   afterEach(function() {
-    System.config({ sofe: null});
     window.sofe.clearCache();
   });
 
   it('should resolve a service', function(run) {
-    System.config({
+    system.config({
       sofe: {
         manifest: {
           simple: root + '/test/services/simple1.js'
@@ -15,7 +21,7 @@ describe('static resolution', function() {
       }
     });
 
-    System.import('simple!/base/src/sofe.js')
+    system.import('simple!/base/src/sofe.js')
       .then(function(auth) {
         expect(auth()).toBe('mumtaz');
         run();
@@ -23,7 +29,7 @@ describe('static resolution', function() {
   });
 
   it('should resolve multiple services at a time', function(run) {
-    System.config({
+    system.config({
       sofe: {
         manifest: {
           simple: root + '/test/services/simple1.js',
@@ -33,8 +39,8 @@ describe('static resolution', function() {
     });
 
     Promise.all([
-      System.import('simple!/base/src/sofe.js'),
-      System.import('simple2!/base/src/sofe.js')
+      system.import('simple!/base/src/sofe.js'),
+      system.import('simple2!/base/src/sofe.js')
     ]).then(function(resp) {
       expect(resp[0]()).toBe('mumtaz');
       expect(resp[1]()).toBe('kwayis');
@@ -43,27 +49,7 @@ describe('static resolution', function() {
   });
 
   it('should resolve service dependencies that are other services', function(run) {
-    System.config({
-      sofe: {
-        manifest: {
-          simple: root + '/test/services/simple1.js',
-          simple2: root + '/test/services/simple2.js',
-        }
-      }
-    });
-
-    Promise.all([
-      System.import('simple!/base/src/sofe.js'),
-      System.import('simple2!/base/src/sofe.js')
-    ]).then(function(resp) {
-      expect(resp[0]()).toBe('mumtaz');
-      expect(resp[1]()).toBe('kwayis');
-      run();
-    })
-  });
-
-  it('should resolve service dependencies that are other services', function(run) {
-    System.config({
+    system.config({
       sofe: {
         manifest: {
           simple: root + '/test/services/simple1.js',
@@ -72,7 +58,7 @@ describe('static resolution', function() {
       }
     });
 
-    System.import('simpleDependency!/base/src/sofe.js')
+    system.import('simpleDependency!/base/src/sofe.js')
       .then(function(simple) {
         expect(simple().data).toBe('mumtaz');
         run();
@@ -80,7 +66,7 @@ describe('static resolution', function() {
   });
 
   it('should resolve deep service dependencies', function(run) {
-    System.config({
+    system.config({
       sofe: {
         manifest: {
           simple: root + '/test/services/simple1.js',
@@ -90,39 +76,23 @@ describe('static resolution', function() {
       }
     });
 
-    System.import('deep!/base/src/sofe.js')
+    system.import('deep!/base/src/sofe.js')
       .then(function(deep) {
         expect(deep().data).toBe('mumtaz');
         run();
       });
   });
 
-  // it('should resolve relative dependencies inside services', function(run) {
-  //   System.config({
-  //     sofe: {
-  //       manifest: {
-  //         bret: root + '/test/services/relativeDependency.js'
-  //       }
-  //     }
-  //   });
-  //
-  //   System.import('bret!/base/src/sofe.js')
-  //     .then(function(relative) {
-  //       expect(relative().data).toBe('mumtaz');
-  //       run();
-  //     });
-  // });
-
   it('should resolve relative dependencies inside services', function(run) {
-    System.config({
+    system.config({
       sofe: {
         manifest: {
-          deep: root + '/test/services/relativeDependency.js'
+          relative: root + '/test/services/relativeDependency.js'
         }
       }
     });
 
-    System.import('deep!/base/src/sofe.js')
+    system.import('relative!/base/src/sofe.js')
       .then(function(deep) {
         expect(deep().data).toBe('mumtaz');
         run();
@@ -130,15 +100,15 @@ describe('static resolution', function() {
   });
 
   it('should resolve deep relative dependencies inside services', function(run) {
-    System.config({
+    system.config({
       sofe: {
         manifest: {
-          deep: root + '/test/services/deepRelative.js'
+          deepRelative: root + '/test/services/deepRelative.js'
         }
       }
     });
 
-    System.import('deep!/base/src/sofe.js')
+    system.import('deepRelative!/base/src/sofe.js')
       .then(function(deep) {
         expect(deep().data).toBe('mumtaz');
         run();
@@ -146,7 +116,13 @@ describe('static resolution', function() {
   });
 
   it('should throw an error for an undefined service', function(run) {
-    System.import('derp!/base/src/sofe.js')
+    system.config({
+      sofe: {
+        manifest: {}
+      }
+    });
+
+    system.import('derp!/base/src/sofe.js')
       .catch(function(error) {
         expect(error.message.indexOf('404')).not.toBe(-1);
         run();

@@ -1,6 +1,6 @@
 import { getServiceName, resolvePathFromService } from './utils.js';
 import { getUrlFromRegistry } from './registries.js';
-import { getManifest } from './manifest.js';
+import { getManifest, clearManifest } from './manifest.js';
 
 const config = System.sofe;
 
@@ -64,5 +64,6 @@ export function locate(load) {
 window.sofe = {
   clearCache: function() {
     serviceMap = {};
+    clearManifest();
   }
 }

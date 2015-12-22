@@ -1,4 +1,4 @@
-var simple = require('simple!base/dist/sofe.js');
+var simple = require('simple!base/src/sofe.js');
 
 module.exports = function() {
   return {

@@ -25,7 +25,7 @@ export function getManifest(config) {
 				.then((resp) => resp.json())
 				.then((json) => {
 					if (json && json.sofe && json.sofe.manifest) {
-						cachedRemoteManifest = json.sofe.manifest;
+						cachedRemoteManifest = window.sofe.cachedRemoteManifest = json.sofe.manifest;
 						resolve(json.sofe.manifest);
 					} else {
 						reject('Invalid manifest JSON: must include a sofe attribute with a manifest object');
@@ -37,4 +37,8 @@ export function getManifest(config) {
 			resolve(null);
 		}
 	})
+}
+
+export function clearManifest() {
+  cachedRemoteManifest = window.sofe.cachedRemoteManifest = null;
 }
