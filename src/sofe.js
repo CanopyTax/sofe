@@ -51,12 +51,12 @@ export function locate(load) {
 							resolve(url);
 						})
 						.catch((error) => {
-							throw new Error(error)
+              reject(error);
 						});
 				}
 			})
 			.catch((error) => {
-				throw new Error(error)
+        reject(error);
 			});
 	})
 }

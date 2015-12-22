@@ -44,4 +44,74 @@ describe('remote resolution', function() {
         run();
       });
   });
+
+  it('should resolve deep service dependencies', function(run) {
+    system.import('deep!/base/src/sofe.js')
+      .then(function(deep) {
+        expect(deep().data).toBe('mumtaz');
+        run();
+      });
+  });
+
+  it('should resolve relative dependencies inside services', function(run) {
+    system.import('relative!/base/src/sofe.js')
+      .then(function(deep) {
+        expect(deep().data).toBe('mumtaz');
+        run();
+      });
+  });
+
+  it('should resolve deep relative dependencies inside services', function(run) {
+    system.import('deepRelative!/base/src/sofe.js')
+      .then(function(deep) {
+        expect(deep().data).toBe('mumtaz');
+        run();
+      });
+  });
+
+  it('should throw an error for an undefined service', function(run) {
+    system.import('derp!/base/src/sofe.js')
+      .catch(function(error) {
+        expect(error.message.indexOf('404')).not.toBe(-1);
+        run();
+      });
+  });
+
+  it('should throw an error for unparseable json manifest', function(run) {
+    system = new System.constructor();
+
+    system.config({
+      sofe: {
+        manifestUrl: root + '/test/manifests/malformed.json'
+      }
+    });
+
+    system.import('deepRelative!/base/src/sofe.js')
+      .then(function(something) {
+        run();
+      })
+      .catch(function(err) {
+        expect(err.message.split('\n')[0]).toBe('Invalid manifest: must be parseable JSON');
+        run();
+      });
+  });
+
+  it('should throw an error if manifest does not contain a sofe attribute', function(run) {
+    system = new System.constructor();
+
+    system.config({
+      sofe: {
+        manifestUrl: root + '/test/manifests/nosofe.json'
+      }
+    });
+
+    system.import('deepRelative!/base/src/sofe.js')
+      .then(function(something) {
+        run();
+      })
+      .catch(function(err) {
+        expect(err.message.split('\n')[0]).toBe('Invalid manifest JSON: must include a sofe attribute with a manifest object');
+        run();
+      });
+  });
 });

@@ -28,10 +28,14 @@ export function getManifest(config) {
 						cachedRemoteManifest = window.sofe.cachedRemoteManifest = json.sofe.manifest;
 						resolve(json.sofe.manifest);
 					} else {
-						reject('Invalid manifest JSON: must include a sofe attribute with a manifest object');
+						reject(
+              new Error('Invalid manifest JSON: must include a sofe attribute with a manifest object')
+            );
 					}
 				})
-				.catch(() => reject('Invalid manifest: must be parseable JSON'));
+				.catch(() => reject(
+          new Error('Invalid manifest: must be parseable JSON')
+        ));
 		} else {
 			// Resolve with no manifest if there is no config.manifest or config.manifestUrl
 			resolve(null);
