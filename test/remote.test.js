@@ -114,4 +114,25 @@ describe('remote resolution', function() {
         run();
       });
   });
+
+  it('should override remote manifest urls with local static definitions', function(run) {
+    
+    system = new System.constructor();
+
+    system.config({
+      sofe: {
+        manifest: {
+          simple: 'http://localhost:9876/base/test/services/simple2.js'
+        },
+        manifestUrl: root + '/test/manifests/simple.json'
+      }
+    });
+
+    // Load simple but really it is loading simple2 cause it is overriden
+    system.import('simple!/base/src/sofe.js')
+      .then(function(simple2) {
+        expect(simple2()).toBe('kwayis');
+        run();
+      })
+  })
 });
