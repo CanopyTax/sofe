@@ -1,8 +1,9 @@
-const CORS_URL = 'http://cors.maxogden.com/';
+const CORS_URL = 'http://cors.maxogden.com';
+const NPM_CDN = 'https://npmcdn.com';
 
 function getRegistryUrl(config) {
 	if (config && config.registry) return config.registry;
-	else return `${CORS_URL}https://registry.npmjs.org`;
+	else return `${CORS_URL}/https://registry.npmjs.org`;
 }
 
 /**
@@ -31,11 +32,11 @@ export function getUrlFromRegistry(service, config) {
 						resolve(pkg.sofe.url);
 					} else {
 						resolve(
-							`https://npmcdn.com/${service}@${version}`
+							`${NPM_CDN}/${service}@${version}`
 						);
 					}
 				}
 			})
-			.catch(() => reject(`Invalid registry response for service: ${service}`))
+			.catch(() => reject(new Error(`Invalid registry response for service: ${service}`)))
 	});
 }

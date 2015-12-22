@@ -26,7 +26,7 @@ module.exports = function(config) {
       'node_modules/systemjs/dist/system.src.js',
       { pattern: 'node_modules/path-browserify/**/*.js', watched: false, included: false, served: true},
       { pattern: 'src/**/*.*', watched: true, included: false, served: true},
-      { pattern: 'test/**/*.*', watched: true, included: false, served: true},
+      { pattern: 'test/**/*', watched: true, included: false, served: true},
       'test/**/*.test.js'
     ],
 
