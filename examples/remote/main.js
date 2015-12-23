@@ -1,6 +1,6 @@
 import auth from 'auth!sofe';
 
 document.getElementById('response')
-  .innerText = JSON.stringify(
+  .textContent = JSON.stringify(
     auth.getSession()
   );
