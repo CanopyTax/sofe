@@ -13,7 +13,7 @@ System.config({
     "npm:*": "jspm_packages/npm/*"
   },
   sofe: {
-    "manifestUrl": "http://localhost:5554/services/manifest.json"
+    "manifestUrl": "http://sofe.surge.sh/services/manifest.json"
   },
 
   map: {
