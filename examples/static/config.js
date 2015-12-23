@@ -8,12 +8,10 @@ System.config({
       "optimisation.modules.system"
     ]
   },
-
   paths: {
     "github:*": "jspm_packages/github/*",
     "npm:*": "jspm_packages/npm/*"
   },
-
   sofe: {
     "manifest": {
       "auth": "http://localhost:5554/services/auth.js"

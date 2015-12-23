@@ -1,7 +1,6 @@
 import auth from 'auth!sofe';
 
-document.writeln(
-  JSON.stringify(
+document.getElementById('response')
+  .innerText = JSON.stringify(
     auth.getSession()
-  )
-)
+  );

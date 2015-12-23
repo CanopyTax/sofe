@@ -3,13 +3,34 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width">
-		<title>Test</title>
+		<title>Remote Manifest</title>
 	</head>
 	<body>
 		<script src="jspm_packages/system.js"></script>
 		<script src="config.js"></script>
 		<script>
       System.import('main.js');
-		</script> 
+		</script>
+    <h2>
+      Remote Manifest
+    </h2>
+    <p>
+<pre>
+System.config({
+  sofe: {
+    manifestUrl: "http://localhost:5554/services/manifest.json"
+  }
+});
+
+import auth from 'auth!sofe';
+
+document.getElementById('response')
+  .innerText = JSON.stringify(
+    auth.getSession()
+  );
+</pre>
+    </p>
+    <p><strong>Service Response: <span id="response"></span></strong></p>
+    <p><a href="/">&#9664; Back</a></p>
 	</body>
 </html>

@@ -8,7 +8,8 @@
     "build": "babel src --out-dir lib && node build.js",
     "rollup": "rollup src/index.js -f cjs -o dist/sofe.js",
     "clean": "rm -r lib",
-    "prepublish": "npm run build"
+    "prepublish": "npm run build",
+    "examples": "cd examples/static && npm install && jspm install && cd ../remote && npm install && jspm install && cd ../../ && static -p5554 examples/"
   },
   "repository": {
     "type": "git",
@@ -44,6 +45,7 @@
     "karma-coverage": "git+https://github.com/douglasduteil/karma-coverage.git#next",
     "karma-jasmine": "^0.3.6",
     "karma-phantomjs-launcher": "^0.2.1",
+    "node-static": "^0.7.7",
     "phantomjs": "^1.9.19",
     "rollup": "0.21.2",
     "rollup-plugin-commonjs": "1.4.0",
