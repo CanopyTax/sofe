@@ -1,7 +1,11 @@
 # Sofe
 Service Oriented Front-end
 
-Status: [![Build Status](https://travis-ci.org/CanopyTax/sofe.svg?branch=master)](https://travis-ci.org/CanopyTax/sofe) [![codecov.io](https://codecov.io/github/CanopyTax/sofe/coverage.svg?branch=master)](https://codecov.io/github/CanopyTax/sofe?branch=master)
+Status: 
+[![npm version](https://img.shields.io/npm/v/sofe.svg?style=flat-square)](https://www.npmjs.org/package/sofe)
+[![Build Status](https://img.shields.io/travis/CanopyTax/sofe.svg?style=flat-square)](https://travis-ci.org/CanopyTax/sofe)
+[![Code Coverage](https://img.shields.io/codecov/c/github/CanopyTax/sofe.svg?style=flat-square)](https://codecov.io/github/CanopyTax/sofe)
+
 
 ## Motivation for Front-end Services
 1. Easier to organize and scale teams
