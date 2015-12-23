@@ -1,7 +1,11 @@
 # Sofe
 Service Oriented Front-end
 
-Status: [![Build Status](https://travis-ci.org/CanopyTax/sofe.svg?branch=master)](https://travis-ci.org/CanopyTax/sofe) [![codecov.io](https://codecov.io/github/CanopyTax/sofe/coverage.svg?branch=master)](https://codecov.io/github/CanopyTax/sofe?branch=master)
+Status: 
+[![npm version](https://img.shields.io/npm/v/sofe.svg?style=flat-square)](https://www.npmjs.org/package/sofe)
+[![Build Status](https://img.shields.io/travis/CanopyTax/sofe.svg?style=flat-square)](https://travis-ci.org/CanopyTax/sofe)
+[![Code Coverage](https://img.shields.io/codecov/c/github/CanopyTax/sofe.svg?style=flat-square)](https://codecov.io/github/CanopyTax/sofe)
+
 
 ## Motivation for Front-end Services
 1. Easier to organize and scale teams
@@ -18,12 +22,24 @@ Status: [![Build Status](https://travis-ci.org/CanopyTax/sofe.svg?branch=master)
 3. Interaction is strictly via API
 4. Has it's own data store, does not share same data structures as other services. Individually responsible for server communication.
 5. Services are loaded at *run-time* and therefore *not* bundled into the app (services themselves can be built and bundled but are independent deployables)
-6. Services need to be written in the ES6 module syntax
+
+## Quick Start
+Quickly setup Sofe with System.js and JSPM:
+
+```bash
+jspm install sofe=npm:sofe
+```
+
+Load Sofe services:
+```javascript
+import auth from 'auth!sofe'; // Will only work on non-bundled projects
+System.import('auth!sofe').then(auth => auth.doStuff()) // Works on bundled and non-bundled projects
+```
+### Examples:
+Examples are available at [sofe.surge.sh](http://sofe.surge.sh) or run them [locally](examples/examples.md)
 
 ## Sofe API
 The following examples assume a deployed authentication service.
-
-*Notes on custom sytemjs plugins: https://github.com/systemjs/systemjs/blob/master/docs/creating-plugins.md*
 
 ### Configuring Sofe
 Each deployed service has a unique name. Sofe will resolve the service name into a URL where the service can be loaded.
@@ -125,7 +141,7 @@ System.import('auth!sofe')
 ```
 
 ```javascript
-// Use the sofe loader directly independently of System.js
+// Use the sofe loader directly independently of System.js **NOT YET IMPLEMENTED**
 sofe.import('auth')
   .then((auth) => {
     // do something with the auth service
