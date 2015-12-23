@@ -12,7 +12,10 @@ export function getServiceName(address) {
 	let service = a.pathname;
 
 	if (service[0] === '/') service = service.substring(1);
-	return service;
+
+  const services = service.split('/');
+
+  return services[services.length - 1];
 }
 
 /**

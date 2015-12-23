@@ -27,3 +27,9 @@ build/Release
 node_modules
 lib
 dist
+
+examples/remote/jspm_packages
+examples/static/jspm_packages
+
+examples/remote/node_modules
+examples/static/node_modules
