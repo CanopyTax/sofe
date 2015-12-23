@@ -102,7 +102,9 @@ module.exports = function(config) {
           type: 'text'
         },
         {
-          type: 'json'
+          type: 'json',
+          dir : 'coverage/',
+          file : 'coverage.txt'
         }
       ]
     },
