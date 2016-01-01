@@ -37,27 +37,38 @@ export function locate(load) {
 	let service = getServiceName(load.address);
 
 	return new Promise((resolve, reject) => {
-		getManifest(config)
-			.then((manifest) => {
-				// First try and resolve the service with the manifest,
-				// otherwise resolve by requesting the registry
-				if (manifest && manifest[service]) {
-					serviceMap[load.name] = manifest[service];
-					resolve(manifest[service]);
-				} else {
-					getUrlFromRegistry(service, config)
-						.then((url) => {
-							serviceMap[load.name] = url;
-							resolve(url);
-						})
-						.catch((error) => {
-              reject(error);
-						});
-				}
-			})
-			.catch((error) => {
-        reject(error);
-			});
+		//first check session storage (since it is very transient)
+		if (window && window.sessionStorage && window.sessionStorage.getItem(`sofe:${service}`)) {
+			resolve(window.sessionStorage.getItem(`sofe:${service}`));
+		}
+		//otherwise check local storage (since it is less transient)
+		else if (window && window.localStorage && window.localStorage.getItem(`sofe:${service}`)) {
+			resolve(window.localStorage.getItem(`sofe:${service}`));
+		}
+		//otherwise check manifest
+		else {
+			getManifest(config)
+				.then((manifest) => {
+					// First try and resolve the service with the manifest,
+					// otherwise resolve by requesting the registry
+					if (manifest && manifest[service]) {
+						serviceMap[load.name] = manifest[service];
+						resolve(manifest[service]);
+					} else {
+						getUrlFromRegistry(service, config)
+							.then((url) => {
+								serviceMap[load.name] = url;
+								resolve(url);
+							})
+							.catch((error) => {
+								reject(error);
+							});
+					}
+				})
+				.catch((error) => {
+					reject(error);
+				});
+		}
 	})
 }
 

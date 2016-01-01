@@ -5,9 +5,9 @@
   "main": "dist/sofe.js",
   "scripts": {
     "test": "karma start",
-    "build": "babel src --out-dir lib && node build.js",
+    "build": "npm run clean && babel src --out-dir lib && node build.js",
     "rollup": "rollup src/index.js -f cjs -o dist/sofe.js",
-    "clean": "rm -r lib",
+    "clean": "rm -rf lib",
     "prepublish": "npm run build",
     "examples": "cd examples/static && npm install && jspm install && cd ../remote && npm install && jspm install && cd ../../ && static -p5554 examples/"
   },
