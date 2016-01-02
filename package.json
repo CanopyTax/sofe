@@ -1,6 +1,6 @@
 {
   "name": "sofe",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Service Oriented Front-end",
   "main": "dist/sofe.js",
   "scripts": {
@@ -26,7 +26,7 @@
       "email": "joel.denning@canopytax.com"
     }
   ],
-  "license": "MIT",
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/CanopyTax/sofe/issues"
   },
