@@ -13,36 +13,36 @@ function getRegistryUrl(config) {
  * @param {Object} config The sofe config object
  * @return {Promise} A promise which resolves with the service url
  */
-export function getUrlFromRegistry(service, config) {
-	return new Promise(function(resolve, reject) {
-    const requestUrl = getRegistryUrl(config) + '/' + service;
+	export function getUrlFromRegistry(service, config) {
+		return new Promise(function(resolve, reject) {
+			const requestUrl = getRegistryUrl(config) + '/' + service;
 
-		fetch(requestUrl)
-			.then((resp) => {
-        if (resp.status >= 200 && resp.status < 300) {
-          return resp.json();
-        } else {
-          return Promise.reject(new Error(resp.statusText || resp.status));
-        }
-      })
-			.then((json) => {
-				if (json.sofe) {
-					// The registry is a simple sofe registry
-					resolve(json.sofe.url);
-				} else {
-					// The registry is an NPM registry
-					const version = json['dist-tags'].latest;
-					const pkg = json.versions[version];
-
-					if (pkg.sofe && pkg.sofe.url) {
-						resolve(pkg.sofe.url);
+			fetch(requestUrl)
+				.then((resp) => {
+					if (resp.status >= 200 && resp.status < 300) {
+						return resp.json();
 					} else {
-						resolve(
-							`${NPM_CDN}/${service}@${version}`
-						);
+						return Promise.reject(new Error(resp.statusText || resp.status));
 					}
-				}
-			})
-			.catch(() => reject(new Error(`Invalid registry response for service: ${service}\nRequest:${requestUrl}`)))
-	});
-}
+				})
+				.then((json) => {
+					if (json.sofe) {
+						// The registry is a simple sofe registry
+						resolve(json.sofe.url);
+					} else {
+						// The registry is an NPM registry
+						const version = json['dist-tags'].latest;
+						const pkg = json.versions[version];
+
+						if (pkg.sofe && pkg.sofe.url) {
+							resolve(pkg.sofe.url);
+						} else {
+							resolve(
+								`${NPM_CDN}/${service}@${version}`
+							);
+						}
+					}
+				})
+				.catch(() => reject(new Error(`Invalid registry response for service: ${service}\nRequest:${requestUrl}`)))
+		});
+	}
