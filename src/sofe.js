@@ -15,15 +15,16 @@ let serviceMap = {};
  * allow the dependency to load relative to the parent service.
  */
 System.normalize = function(name, parentName, parentAddress) {
-	if (parentName && parentName.match(/sofe/))
+	if (parentName && parentName.match(/sofe/)) {
 		if (name.match(/sofe/)) {
 			return systemNormalize.call(this, name, parentName, parentAddress);
 		} else {
 			let resolution = resolvePathFromService(serviceMap, name, parentName);
 			return resolution;
 		}
-		else
-			return systemNormalize.call(this, name, parentName, parentAddress);
+	} else {
+		return systemNormalize.call(this, name, parentName, parentAddress);
+	}
 }
 
 /**
@@ -60,13 +61,13 @@ export function locate(load) {
 						resolve(manifest[service]);
 					} else {
 						getUrlFromRegistry(service, config)
-							.then((url) => {
-								serviceMap[load.name] = url;
-								resolve(url);
-							})
-							.catch((error) => {
-								reject(error);
-							});
+						.then((url) => {
+							serviceMap[load.name] = url;
+							resolve(url);
+						})
+						.catch((error) => {
+							reject(error);
+						});
 					}
 				})
 				.catch((error) => {
@@ -77,8 +78,8 @@ export function locate(load) {
 }
 
 window.sofe = {
-  clearCache: function() {
-    serviceMap = {};
-    clearManifest();
-  }
+	clearCache: function() {
+		serviceMap = {};
+		clearManifest();
+	}
 }

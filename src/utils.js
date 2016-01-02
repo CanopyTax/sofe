@@ -13,9 +13,9 @@ export function getServiceName(address) {
 
 	if (service[0] === '/') service = service.substring(1);
 
-  const services = service.split('/');
+	const services = service.split('/');
 
-  return services[services.length - 1];
+	return services[services.length - 1];
 }
 
 /**
