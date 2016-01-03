@@ -1,4 +1,4 @@
-# Sofe
+# sofe
 Service Oriented Front-end
 
 Status: 
@@ -26,12 +26,12 @@ Status:
 
 ## Quick Start
 1. [Setup SystemJS and JSPM](http://jspm.io/docs/getting-started.html)
-2. Configure SystemJS to use the Sofe plugin
+2. Configure SystemJS to use the sofe plugin
 
   ```bash
   jspm install sofe=npm:sofe
   ```
-3. Load Sofe services:
+3. Load sofe services:
 ```javascript
 //Two options for loading a sofe service called 'auth'
 import auth from 'auth!sofe'; // Will only work on non-bundled projects
@@ -40,11 +40,11 @@ System.import('auth!sofe').then(auth => auth.doStuff()) // Works on bundled and 
 ### Demo:
 Examples are available at [sofe.surge.sh](http://sofe.surge.sh) or you can run them [locally](examples/examples.md)
 
-## Sofe API
+## sofe API
 
-### Configuring Sofe
-Each deployed service has a unique name. Sofe will resolve the service name into a URL where the service can be loaded.
-Sofe makes the resolution process flexible and configurable.
+### Configuring sofe
+Each deployed service has a unique name. sofe will resolve the service name into a URL where the service can be loaded.
+sofe makes the resolution process flexible and configurable.
 
 #### Automatic Resolution via NPM
 By default, sofe will resolve services by assuming that the name corresponds to an npm package. If the name exists on npm,
@@ -53,7 +53,7 @@ The `sofe` attribute should be an object with a `url` attribute which tells sofe
 
 **Approach #1:** NPM to find urls, npmcdn.com for files
 
-*Any* npm package can be coerced into being a sofe service, since npmcdn.com hosts all files for all npm packages. This is automatically done by Sofe whenever the package.json for an npm package does not have a valid `sofe` property.
+*Any* npm package can be coerced into being a sofe service, since npmcdn.com hosts all files for all npm packages. This is automatically done by sofe whenever the package.json for an npm package does not have a valid `sofe` property.
 
 **Approach #2:** NPM to find urls, your own CDN for files
 
@@ -80,7 +80,7 @@ System.config({
 });
 ```
 
-**Note:** Whichever version of an npm package is tagged as `latest` will be loaded by Sofe.
+**Note:** Whichever version of an npm package is tagged as `latest` will be loaded by sofe.
 
 #### Manifest Resolution (used for production workflows)
 Instead of automatically resolving services, provide a manifest of services with associated service deployable locations.
