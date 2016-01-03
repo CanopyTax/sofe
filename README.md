@@ -143,6 +143,29 @@ The `package.json` file of `canopy-services` would be:
 
 Using this method of hosting your manifest file, when you need to add a new service or update an existing one, simply publish a new version of `canopy-services`.
 
+#### Browser storage resolution
+**Approach #5: browser storage**
+
+In addition to automatic resolution or manifest resolution, the urls to individual sofe services can be overridden with sessionStorage and/or localStorage. This is meant for times when you want to test out new changes to a service on an application where you can't easily change the `System.config` (i.e., you don't own the code to the application). An override is a sessionStorage/localStorage item whose key is `sofe:service-name` and whose value is a url.
+
+Example:
+```js
+window.localStorage.setItem('sofe:my-service', 'http://somelocation.com/my-service.js');
+// OR
+window.sessionStorage.setItem('sofe:my-service', 'http://somelocation.com/my-service.js');
+```
+
+#### Resolution precedence
+If there are multiple urls that a service could be resolved to, sofe will resolve the service url in the following order (highest precedence to lowest precedence):
+
+1. Session storage
+2. Local storage
+3. The `manifest` property inside of the `sofe` attribute of the `System.config` or manifest file
+4. The `manifestUrl` property inside of `sofe` attribute of the `System.config` or manifest file
+5. The `url` property inside of the `sofe` attribute of the NPM package's package.json file
+6. The `main` file inside of the NPM package's package.json file, at the `latest` version. The files themselves are retrieved from npmcdn.com.
+
+
 ### When to use `System.import` instead of just `import`
 If your application is bundled, you must indicate that sofe services should be loaded at runtime. The following syntax is (mostly) in accordance to the whatwg/loader specification for how to asynchronously import javascript modules.
 ```javascript
