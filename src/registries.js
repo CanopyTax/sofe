@@ -1,5 +1,6 @@
 const CORS_URL = 'http://cors.maxogden.com';
 const NPM_CDN = 'https://npmcdn.com';
+const hasWindow = typeof window !== 'undefined';
 
 function getRegistryUrl(config) {
 	if (config && config.registry) return config.registry;
@@ -16,6 +17,12 @@ function getRegistryUrl(config) {
 	export function getUrlFromRegistry(service, config) {
 		return new Promise(function(resolve, reject) {
 			const requestUrl = getRegistryUrl(config) + '/' + service;
+
+			if (!hasWindow) {
+				return resolve(
+					`/blank.js`
+				);
+			}
 
 			fetch(requestUrl)
 				.then((resp) => {

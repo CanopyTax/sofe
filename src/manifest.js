@@ -19,7 +19,7 @@ export function getManifest(config) {
 			return resolve(cachedRemoteManifest);
 		}
 
-		if (config.manifestUrl) {
+		if (config.manifestUrl && hasWindow) {
 			fetch(config.manifestUrl)
 				.then((resp) => resp.json())
 				.then((json) => {
