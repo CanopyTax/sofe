@@ -1,4 +1,5 @@
 let cachedRemoteManifest;
+let hasWindow = typeof window !== 'undefined';
 
 /**
  * Asynchronously find a manifest for resolving sofe services. The manifest is a simple
@@ -23,9 +24,13 @@ export function getManifest(config) {
 				.then((resp) => resp.json())
 				.then((json) => {
 					if (json && json.sofe && json.sofe.manifest) {
-						cachedRemoteManifest = window.sofe.cachedRemoteManifest = { 
+						cachedRemoteManifest = { 
 							...json.sofe.manifest, ...staticManifest
 						};
+
+						if (hasWindow) {
+							window.sofe.cachedRemoteManifest = cachedRemoteManifest;
+						}
 
 						resolve(cachedRemoteManifest);
 					} else {

@@ -77,9 +77,11 @@ export function locate(load) {
 	})
 }
 
-window.sofe = {
-	clearCache: function() {
-		serviceMap = {};
-		clearManifest();
+if (typeof window !== 'undefined') {
+	window.sofe = {
+		clearCache: function() {
+			serviceMap = {};
+			clearManifest();
+		}
 	}
 }
