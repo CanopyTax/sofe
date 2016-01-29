@@ -1,5 +1,5 @@
 let cachedRemoteManifest;
-let hasWindow = typeof window !== 'undefined';
+const hasWindow = typeof window !== 'undefined';
 
 /**
  * Asynchronously find a manifest for resolving sofe services. The manifest is a simple
