@@ -20,7 +20,7 @@ function getRegistryUrl(config) {
 
 			if (!hasWindow) {
 				return resolve(
-					`file://${process.cwd()}/blank.js`
+					`file://${__dirname}/blank.js`
 				);
 			}
 
