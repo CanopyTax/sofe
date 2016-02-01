@@ -16,12 +16,20 @@ let serviceMap = {};
  * allow the dependency to load relative to the parent service.
  */
 System.normalize = function(name, parentName, parentAddress) {
+	// If the module is loaded by a parent referencing !sofe, treat it is as a sofe service
 	if (parentName && parentName.match(/sofe/)) {
 		if (name.match(/sofe/)) {
 			return systemNormalize.call(this, name, parentName, parentAddress);
 		} else {
-			let resolution = resolvePathFromService(serviceMap, name, parentName);
-			return resolution;
+			if (name && name[0] === '.') {
+				// Only load files relative to the sofe service
+				// if they are loaded with a relative path
+				return resolvePathFromService(serviceMap, name, parentName);
+			} else {
+				// Else treat the dependency like a normal file
+				// to be loaded relative to the application code
+				return systemNormalize.call(this, name, parentName, parentAddress);
+			}
 		}
 	} else {
 		return systemNormalize.call(this, name, parentName, parentAddress);
