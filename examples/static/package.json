@@ -14,7 +14,7 @@
   },
   "jspm": {
     "dependencies": {
-      "sofe": "npm:sofe@^0.3.2"
+      "sofe": "npm:sofe@^0.3.4"
     },
     "devDependencies": {
       "babel": "npm:babel-core@^5.8.24",
