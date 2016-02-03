@@ -1,5 +1,6 @@
 let cachedRemoteManifest;
 const hasWindow = typeof window !== 'undefined';
+let fetchManifestPromise = null;
 
 /**
  * Asynchronously find a manifest for resolving sofe services. The manifest is a simple
@@ -11,7 +12,12 @@ const hasWindow = typeof window !== 'undefined';
  * @return {Promise} A promise which is resolved with a service manifest.
  */
 export function getManifest(config) {
-	return new Promise((resolve, reject) => {
+	// Don't fetch the manifest twice
+	if (fetchManifestPromise) {
+		return fetchManifestPromise;
+	}
+
+	const promise = new Promise((resolve, reject) => {
 		let staticManifest = config.manifest || {};
 
 		// Only request a remote manifest file once.
@@ -46,6 +52,7 @@ export function getManifest(config) {
 
 						resolve(cachedRemoteManifest);
 					} else {
+						fetchManifestPromise = null;
 						reject(
 							new Error('Invalid manifest JSON: must include a sofe attribute with a manifest object')
 						);
@@ -54,6 +61,7 @@ export function getManifest(config) {
 			}
 
 			function xhrFailed() {
+				fetchManifestPromise = null;
 				reject(
 					new Error('Invalid manifest: must be parseable JSON')
 				);
@@ -62,7 +70,11 @@ export function getManifest(config) {
 			// Resolve with no manifest if there is no config.manifest or config.manifestUrl
 			resolve(staticManifest);
 		}
-	})
+	});
+
+	fetchManifestPromise = promise;
+
+	return promise;
 }
 
 export function clearManifest() {

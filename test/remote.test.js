@@ -134,5 +134,40 @@ describe('remote resolution', function() {
 				expect(simple2()).toBe('kwayis');
 				run();
 			})
-	})
+	});
+
+	// Test #13
+	it('never retrieves the manifest file more than once', function(run) {
+		var numManifestAjaxRequests = 0;
+		recordAjax();
+		Promise.all([
+			system.import('simple!/base/src/sofe.js'),
+			system.import('simple2!/base/src/sofe.js'),
+		])
+		.then(function() {
+			stopRecordingAjax();
+			expect(numManifestAjaxRequests).toBe(1);
+			run();
+		})
+		.catch(function(ex) {
+			stopRecordingAjax();
+			throw ex;
+		});
+
+		var originalXHROpen;
+
+		function recordAjax() {
+			originalXHROpen = XMLHttpRequest.prototype.open;
+			XMLHttpRequest.prototype.open = function(method, url) {
+				if (url.endsWith('manifests/simple.json')) {
+					numManifestAjaxRequests++;
+				}
+				return originalXHROpen.apply(this, arguments);
+			}
+		}
+
+		function stopRecordingAjax() {
+			XMLHttpRequest.prototype.open = originalXHROpen;
+		}
+	});
 });
