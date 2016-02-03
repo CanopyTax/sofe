@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "setup": "jspm install"
   },
   "author": "",
   "license": "ISC",
@@ -13,7 +14,7 @@
   },
   "jspm": {
     "dependencies": {
-      "sofe": "npm:sofe@^0.2.1"
+      "sofe": "npm:sofe@^0.3.4"
     },
     "devDependencies": {
       "babel": "npm:babel-core@^5.8.24",

@@ -1,5 +1,5 @@
 {
-  "sofe": {
-    "url": "http://localhost:9876/base/test/services/simple1.js"
-  }
+	"sofe": {
+		"url": "http://localhost:9876/base/test/services/simple1.js"
+	}
 }

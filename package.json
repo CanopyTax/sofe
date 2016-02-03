@@ -1,13 +1,13 @@
 {
   "name": "sofe",
-  "version": "0.2.1",
+  "version": "0.3.4",
   "description": "Service Oriented Front-end",
   "main": "dist/sofe.js",
   "scripts": {
     "test": "karma start",
-    "build": "babel src --out-dir lib && node build.js",
+    "build": "npm run clean && babel src --out-dir lib && node build.js && touch dist/blank.js",
     "rollup": "rollup src/index.js -f cjs -o dist/sofe.js",
-    "clean": "rm -r lib",
+    "clean": "rm -rf lib",
     "prepublish": "npm run build",
     "examples": "cd examples/static && npm install && jspm install && cd ../remote && npm install && jspm install && cd ../../ && static -p5554 examples/"
   },
@@ -26,7 +26,7 @@
       "email": "joel.denning@canopytax.com"
     }
   ],
-  "license": "MIT",
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/CanopyTax/sofe/issues"
   },
@@ -50,8 +50,7 @@
     "rollup": "0.21.2",
     "rollup-plugin-commonjs": "1.4.0",
     "rollup-plugin-npm": "1.1.0",
-    "systemjs": "0.19.6",
-    "whatwg-fetch": "^0.10.1"
+    "systemjs": "0.19.6"
   },
   "files": [
     "dist",

@@ -1,4 +1,4 @@
-# Sofe Examples
+# sofe Examples
 
 ## Setup
 ```bash

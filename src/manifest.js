@@ -1,4 +1,5 @@
 let cachedRemoteManifest;
+const hasWindow = typeof window !== 'undefined';
 
 /**
  * Asynchronously find a manifest for resolving sofe services. The manifest is a simple
@@ -11,32 +12,52 @@ let cachedRemoteManifest;
  */
 export function getManifest(config) {
 	return new Promise((resolve, reject) => {
-    let staticManifest = config.manifest || {};
+		let staticManifest = config.manifest || {};
 
 		// Only request a remote manifest file once.
 		if (cachedRemoteManifest) {
 			return resolve(cachedRemoteManifest);
 		}
 
-		if (config.manifestUrl) {
-			fetch(config.manifestUrl)
-				.then((resp) => resp.json())
-				.then((json) => {
+		if (config.manifestUrl && hasWindow) {
+			const xhr = new XMLHttpRequest();
+			xhr.addEventListener('load', xhrLoaded);
+			xhr.addEventListener('error', xhrFailed);
+			xhr.open('GET', config.manifestUrl);
+			xhr.send();
+
+			function xhrLoaded() {
+				if (Number(xhr.status) >= 200 && Number(xhr.status) < 300) {
+					let json;
+					try {
+						json = JSON.parse(xhr.responseText);
+					} catch(ex) {
+						xhrFailed();
+						return;
+					}
 					if (json && json.sofe && json.sofe.manifest) {
-						cachedRemoteManifest = window.sofe.cachedRemoteManifest = { 
-              ...json.sofe.manifest, ...staticManifest
-            };
+						cachedRemoteManifest = {
+							...json.sofe.manifest, ...staticManifest
+						};
+
+						if (hasWindow) {
+							window.sofe.cachedRemoteManifest = cachedRemoteManifest;
+						}
 
 						resolve(cachedRemoteManifest);
 					} else {
 						reject(
-              new Error('Invalid manifest JSON: must include a sofe attribute with a manifest object')
-            );
+							new Error('Invalid manifest JSON: must include a sofe attribute with a manifest object')
+						);
 					}
-				})
-				.catch(() => reject(
-          new Error('Invalid manifest: must be parseable JSON')
-        ));
+				}
+			}
+
+			function xhrFailed() {
+				reject(
+					new Error('Invalid manifest: must be parseable JSON')
+				);
+			}
 		} else {
 			// Resolve with no manifest if there is no config.manifest or config.manifestUrl
 			resolve(staticManifest);
@@ -45,5 +66,5 @@ export function getManifest(config) {
 }
 
 export function clearManifest() {
-  cachedRemoteManifest = window.sofe.cachedRemoteManifest = null;
+	cachedRemoteManifest = window.sofe.cachedRemoteManifest = null;
 }

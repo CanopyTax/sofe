@@ -1,12 +1,12 @@
 {
-  "sofe": {
-    "manifest": {
-      "simple": "http://localhost:9876/base/test/services/simple1.js",
-      "simple2": "http://localhost:9876/base/test/services/simple2.js",
-      "simpleDependency": "http://localhost:9876/base/test/services/simpleDependency.js",
-      "deep": "http://localhost:9876/base/test/services/deepDependency.js",
-      "relative": "http://localhost:9876/base/test/services/relativeDependency.js",
-      "deepRelative": "http://localhost:9876/base/test/services/deepRelative.js"
-    }
-  }
+	"sofe": {
+		"manifest": {
+			"simple": "http://localhost:9876/base/test/services/simple1.js",
+			"simple2": "http://localhost:9876/base/test/services/simple2.js",
+			"simpleDependency": "http://localhost:9876/base/test/services/simpleDependency.js",
+			"deep": "http://localhost:9876/base/test/services/deepDependency.js",
+			"relative": "http://localhost:9876/base/test/services/relativeDependency.js",
+			"deepRelative": "http://localhost:9876/base/test/services/deepRelative.js"
+		}
+	}
 }

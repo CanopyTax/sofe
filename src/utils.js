@@ -7,15 +7,9 @@ import { join } from 'path-browserify';
  * @return {String} The path within the given URL
  */
 export function getServiceName(address) {
-	let a = document.createElement('a');
-	a.href = address;
-	let service = a.pathname;
+	const splits = address.split('/');
 
-	if (service[0] === '/') service = service.substring(1);
-
-  const services = service.split('/');
-
-  return services[services.length - 1];
+	return splits[splits.length - 1];
 }
 
 /**
@@ -33,11 +27,10 @@ export function resolvePathFromService(services, name, parentName) {
 
 	let parentAddress = getServiceResolution(services, parentName);
 
-	let a = document.createElement('a');
-	a.href = parentAddress;
+	let urlParts = (/^(([^:\/?#]+):)?(\/\/([^\/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?/g).exec(parentAddress);
 
-	return a.origin + join(
-		a.pathname, '../', name
+	return urlParts[1] + urlParts[3] + join(
+		urlParts[5], '../', name
 	);
 }
 
