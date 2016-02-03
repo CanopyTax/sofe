@@ -20,11 +20,23 @@ export function getManifest(config) {
 		}
 
 		if (config.manifestUrl && hasWindow) {
-			fetch(config.manifestUrl)
-				.then((resp) => resp.json())
-				.then((json) => {
+			const xhr = new XMLHttpRequest();
+			xhr.addEventListener('load', xhrLoaded);
+			xhr.addEventListener('error', xhrFailed);
+			xhr.open('GET', config.manifestUrl);
+			xhr.send();
+
+			function xhrLoaded() {
+				if (Number(xhr.status) >= 200 && Number(xhr.status) < 300) {
+					let json;
+					try {
+						json = JSON.parse(xhr.responseText);
+					} catch(ex) {
+						xhrFailed();
+						return;
+					}
 					if (json && json.sofe && json.sofe.manifest) {
-						cachedRemoteManifest = { 
+						cachedRemoteManifest = {
 							...json.sofe.manifest, ...staticManifest
 						};
 
@@ -38,10 +50,14 @@ export function getManifest(config) {
 							new Error('Invalid manifest JSON: must include a sofe attribute with a manifest object')
 						);
 					}
-				})
-				.catch(() => reject(
+				}
+			}
+
+			function xhrFailed() {
+				reject(
 					new Error('Invalid manifest: must be parseable JSON')
-				));
+				);
+			}
 		} else {
 			// Resolve with no manifest if there is no config.manifest or config.manifestUrl
 			resolve(staticManifest);

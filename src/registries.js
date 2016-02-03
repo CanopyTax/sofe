@@ -24,15 +24,21 @@ function getRegistryUrl(config) {
 				);
 			}
 
-			fetch(requestUrl)
-				.then((resp) => {
-					if (resp.status >= 200 && resp.status < 300) {
-						return resp.json();
-					} else {
-						return Promise.reject(new Error(resp.statusText || resp.status));
+			const xhr = new XMLHttpRequest();
+			xhr.addEventListener('load', xhrLoaded);
+			xhr.addEventListener('error', xhrFailed);
+			xhr.open('GET', requestUrl);
+			xhr.send();
+
+			function xhrLoaded() {
+				if (Number(xhr.status) >= 200 && Number(xhr.status) < 300) {
+					let json;
+					try {
+						json = JSON.parse(xhr.responseText);
+					} catch(ex) {
+						xhrFailed();
+						return;
 					}
-				})
-				.then((json) => {
 					if (json.sofe) {
 						// The registry is a simple sofe registry
 						resolve(json.sofe.url);
@@ -49,7 +55,13 @@ function getRegistryUrl(config) {
 							);
 						}
 					}
-				})
-				.catch(() => reject(new Error(`Invalid registry response for service: ${service}\nRequest:${requestUrl}`)))
+				} else {
+					xhrFailed();
+				}
+			}
+
+			function xhrFailed() {
+				reject(new Error(`Invalid registry response for service: ${service}\nRequest:${requestUrl}`))
+			}
 		});
 	}

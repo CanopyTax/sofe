@@ -24,7 +24,6 @@ module.exports = function(config) {
 		// list of files / patterns to load in the browser
 		files: [
 			'node_modules/babel-polyfill/dist/polyfill.js',
-			'node_modules/whatwg-fetch/fetch.js',
 			'node_modules/systemjs/dist/system-polyfills.js',
 			'node_modules/systemjs/dist/system.src.js',
 			{ pattern: 'node_modules/path-browserify/**/*.js', watched: false, included: false, served: true},
