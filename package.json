@@ -1,11 +1,11 @@
 {
   "name": "sofe",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "description": "Service Oriented Front-end",
   "main": "dist/sofe.js",
   "scripts": {
     "test": "karma start",
-    "build": "npm run clean && babel src --out-dir lib && node build.js && touch dist/blank.js",
+    "build": "npm run clean && babel src --out-dir lib && node build.js && cp lib/blank.js dist/blank.js",
     "rollup": "rollup src/index.js -f cjs -o dist/sofe.js",
     "clean": "rm -rf lib",
     "prepublish": "npm run build",
