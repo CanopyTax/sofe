@@ -1,4 +1,4 @@
-let cachedRemoteManifest;
+let cachedRemoteManifestPromise;
 const hasWindow = typeof window !== 'undefined';
 
 /**
@@ -11,13 +11,13 @@ const hasWindow = typeof window !== 'undefined';
  * @return {Promise} A promise which is resolved with a service manifest.
  */
 export function getManifest(config) {
-	return new Promise((resolve, reject) => {
-		let staticManifest = config.manifest || {};
+	// Don't fetch the manifest twice
+	if (cachedRemoteManifestPromise) {
+		return cachedRemoteManifestPromise;
+	}
 
-		// Only request a remote manifest file once.
-		if (cachedRemoteManifest) {
-			return resolve(cachedRemoteManifest);
-		}
+	const promise = new Promise((resolve, reject) => {
+		let staticManifest = config.manifest || {};
 
 		if (config.manifestUrl && hasWindow) {
 			const xhr = new XMLHttpRequest();
@@ -36,7 +36,7 @@ export function getManifest(config) {
 						return;
 					}
 					if (json && json.sofe && json.sofe.manifest) {
-						cachedRemoteManifest = {
+						const cachedRemoteManifest = {
 							...json.sofe.manifest, ...staticManifest
 						};
 
@@ -62,9 +62,13 @@ export function getManifest(config) {
 			// Resolve with no manifest if there is no config.manifest or config.manifestUrl
 			resolve(staticManifest);
 		}
-	})
+	});
+
+	cachedRemoteManifestPromise = promise;
+
+	return promise;
 }
 
 export function clearManifest() {
-	cachedRemoteManifest = window.sofe.cachedRemoteManifest = null;
+	cachedRemoteManifestPromise = window.sofe.cachedRemoteManifest = null;
 }
