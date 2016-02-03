@@ -1,6 +1,5 @@
-let cachedRemoteManifest;
+let cachedRemoteManifestPromise;
 const hasWindow = typeof window !== 'undefined';
-let fetchManifestPromise = null;
 
 /**
  * Asynchronously find a manifest for resolving sofe services. The manifest is a simple
@@ -13,17 +12,12 @@ let fetchManifestPromise = null;
  */
 export function getManifest(config) {
 	// Don't fetch the manifest twice
-	if (fetchManifestPromise) {
-		return fetchManifestPromise;
+	if (cachedRemoteManifestPromise) {
+		return cachedRemoteManifestPromise;
 	}
 
 	const promise = new Promise((resolve, reject) => {
 		let staticManifest = config.manifest || {};
-
-		// Only request a remote manifest file once.
-		if (cachedRemoteManifest) {
-			return resolve(cachedRemoteManifest);
-		}
 
 		if (config.manifestUrl && hasWindow) {
 			const xhr = new XMLHttpRequest();
@@ -42,7 +36,7 @@ export function getManifest(config) {
 						return;
 					}
 					if (json && json.sofe && json.sofe.manifest) {
-						cachedRemoteManifest = {
+						const cachedRemoteManifest = {
 							...json.sofe.manifest, ...staticManifest
 						};
 
@@ -52,7 +46,6 @@ export function getManifest(config) {
 
 						resolve(cachedRemoteManifest);
 					} else {
-						fetchManifestPromise = null;
 						reject(
 							new Error('Invalid manifest JSON: must include a sofe attribute with a manifest object')
 						);
@@ -61,7 +54,6 @@ export function getManifest(config) {
 			}
 
 			function xhrFailed() {
-				fetchManifestPromise = null;
 				reject(
 					new Error('Invalid manifest: must be parseable JSON')
 				);
@@ -72,11 +64,11 @@ export function getManifest(config) {
 		}
 	});
 
-	fetchManifestPromise = promise;
+	cachedRemoteManifestPromise = promise;
 
 	return promise;
 }
 
 export function clearManifest() {
-	cachedRemoteManifest = window.sofe.cachedRemoteManifest = null;
+	cachedRemoteManifestPromise = window.sofe.cachedRemoteManifest = null;
 }
