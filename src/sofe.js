@@ -51,13 +51,17 @@ export function locate(load) {
 		if (hasWindow && window.sessionStorage && window.sessionStorage.getItem(`sofe:${service}`)) {
 			console.log(`Using session storage override to resolve sofe service '${service}' to url '${window.sessionStorage.getItem(`sofe:${service}`)}'`);
 			console.log(`Run window.sessionStorage.removeItem('sofe:${service}') to remove this override`);
-			resolve(window.sessionStorage.getItem(`sofe:${service}`));
+			const url = window.sessionStorage.getItem(`sofe:${service}`);
+			serviceMap[load.name] = url;
+			resolve(url);
 		}
 		//otherwise check local storage (since it is less transient)
 		else if (hasWindow && window.localStorage && window.localStorage.getItem(`sofe:${service}`)) {
 			console.log(`Using local storage override to resolve sofe service '${service}' to url '${window.localStorage.getItem(`sofe:${service}`)}'`);
 			console.log(`Run window.localStorage.removeItem('sofe:${service}') to remove this override`);
-			resolve(window.localStorage.getItem(`sofe:${service}`));
+			const url = window.localStorage.getItem(`sofe:${service}`);
+			serviceMap[load.name] = url;
+			resolve(url);
 		}
 		//otherwise check manifest
 		else {

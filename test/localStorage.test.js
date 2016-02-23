@@ -7,7 +7,7 @@ describe('browser storage resolution', function() {
 		system = new System.constructor();
 		system.config({
 			sofe: {
-				manifestUrl: root + '/test/manifests.simple.json'
+				manifestUrl: root + '/test/manifests/simple.json'
 			}
 		})
 	});
@@ -15,6 +15,8 @@ describe('browser storage resolution', function() {
 	afterEach(function() {
 		window.localStorage.removeItem('sofe:simple');
 		window.sessionStorage.removeItem('sofe:simple');
+		window.localStorage.removeItem('sofe:relative');
+		window.sessionStorage.removeItem('sofe:relative');
 		window.sofe.clearCache();
 	});
 
@@ -41,6 +43,16 @@ describe('browser storage resolution', function() {
 				done();
 			});
 		});
+
+		it('should still work when the overridden service imports a relative file', function(done) {
+			//override what's in the manifest
+			window.sessionStorage.setItem('sofe:overriddenRelative', 'http://localhost:9876/base/test/services/relativeDependency.js');
+			system.import('overriddenRelative!/base/src/sofe.js')
+			.then(function(service) {
+				expect(service().data).toEqual('mumtaz');
+				done();
+			});
+		});
 	});
 
 	describe('localStorage', function() {
@@ -51,6 +63,16 @@ describe('browser storage resolution', function() {
 			.then(function(service) {
 				//the service should be simple2.js instead of simple1.js
 				expect(service()).toEqual('kwayis');
+				done();
+			});
+		});
+
+		it('should still work when the overridden service imports a relative file', function(done) {
+			//override what's in the manifest
+			window.localStorage.setItem('sofe:overriddenRelative', 'http://localhost:9876/base/test/services/relativeDependency.js');
+			system.import('overriddenRelative!/base/src/sofe.js')
+			.then(function(service) {
+				expect(service().data).toEqual('mumtaz');
 				done();
 			});
 		});
