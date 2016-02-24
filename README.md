@@ -1,7 +1,6 @@
 # sofe
 Service Oriented Front-end
 
-Status: 
 [![npm version](https://img.shields.io/npm/v/sofe.svg?style=flat-square)](https://www.npmjs.org/package/sofe)
 [![Build Status](https://img.shields.io/travis/CanopyTax/sofe.svg?style=flat-square)](https://travis-ci.org/CanopyTax/sofe)
 [![Code Coverage](https://img.shields.io/codecov/c/github/CanopyTax/sofe.svg?style=flat-square)](https://codecov.io/github/CanopyTax/sofe)
