@@ -32,6 +32,7 @@ Status:
   jspm install sofe=npm:sofe
   ```
 3. Load sofe services:
+
   ```javascript
   //Two options for loading a sofe service called 'auth'
   import auth from 'auth!sofe'; // Will only work on non-bundled projects
