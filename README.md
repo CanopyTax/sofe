@@ -36,7 +36,7 @@ Status:
   //Two options for loading a sofe service called 'auth'
   import auth from 'auth!sofe'; // Will only work on non-bundled projects
   System.import('auth!sofe').then(auth => auth.doStuff()) // Works on bundled and non-bundled projects
-```
+  ```
 ### Demo:
 Examples are available at [sofe.surge.sh](http://sofe.surge.sh) or you can run them [locally](examples/examples.md)
 
