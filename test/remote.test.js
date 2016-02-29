@@ -110,7 +110,47 @@ describe('remote resolution', function() {
 				run();
 			})
 			.catch(function(err) {
-				expect(err.message.split('\n')[0]).toBe('Invalid manifest JSON: must include a sofe attribute with a manifest object');
+				expect(err.message.split('\n')[0]).toBe("Invalid manifest JSON at '" + system.sofe.manifestUrl + "': a manifest must include a sofe attribute");
+				run();
+			});
+	});
+
+	it("should throw an error if the manifest does not contain a 'manifest' or 'manifestUrl' property", function(run) {
+		system = new System.constructor();
+
+		system.config({
+			sofe: {
+				manifestUrl: root + '/test/manifests/sofe-but-no-manifest.json'
+			}
+		});
+
+		system.import('deepRelative!/base/src/sofe.js')
+			.then(function(something) {
+				expect(1).toBe('System.import should fail when there is a bad sofe manifest');
+				run();
+			})
+			.catch(function (err) {
+				expect(err.message.split('\n')[0]).toBe("Invalid manifest JSON at '" + system.sofe.manifestUrl + "': there must either be a 'sofe.manifest' object or 'sofe.manifestUrl' string");
+				run();
+			});
+	});
+
+	it("should throw an error if the manifest's sofe.manifest propety is not an object", function(run) {
+		system = new System.constructor();
+
+		system.config({
+			sofe: {
+				manifestUrl: root + '/test/manifests/sofe-but-string-manifest.json'
+			}
+		});
+
+		system.import('deepRelative!/base/src/sofe.js')
+			.then(function(something) {
+				expect(1).toBe('System.import should fail when there is a bad sofe manifest');
+				run();
+			})
+			.catch(function (err) {
+				expect(err.message.split('\n')[0]).toBe("Invalid manifest JSON at '" + system.sofe.manifestUrl + "': the 'manifest' property must be a plain object");
 				run();
 			});
 	});
@@ -169,5 +209,112 @@ describe('remote resolution', function() {
 		function stopRecordingAjax() {
 			XMLHttpRequest.prototype.open = originalXHROpen;
 		}
+	});
+
+	// Tests issue #20
+	it("fails to import a sofe service if the sofe-manifest file doesn't exist", function(run) {
+		system = new System.constructor();
+
+		system.config({
+			sofe: {
+				manifestUrl: root + '/test/manifests/nonexistent-manifest-file.json'
+			}
+		});
+
+		system.import('deepRelative!/base/src/sofe.js')
+			.then(function(something) {
+				expect(1).toBe("Sofe imports should fail if the manifest file is invalid")
+				run();
+			})
+			.catch(function(err) {
+				expect(err.message.split('\n')[0]).toBe('Invalid manifest: must be parseable JSON');
+				run();
+			});
+	});
+
+	describe('chained manifests', function() {
+		it('should be able to import a sofe service that is defined in a chained manifest file', function(run) {
+			system = new System.constructor();
+
+			system.config({
+				sofe: {
+					manifestUrl: root + '/test/manifests/chained-valid-manifest.json'
+				}
+			});
+
+			system.import('deepRelative!/base/src/sofe.js')
+				.then(function(something) {
+					expect(something().data).toBe('mumtaz');
+					run();
+				})
+				.catch(function(err) {
+					expect(false).toBe(err);
+					run();
+				});
+		});
+
+		it('should allow for both a manifest and a manifestUrl property, with the manifest property overwriting what is in the chained manifestUrl manifest', function(run) {
+			system = new System.constructor();
+
+			system.config({
+				sofe: {
+					manifestUrl: root + '/test/manifests/chained-with-overrides.json'
+				}
+			});
+
+			Promise.all([system.import('simple1!/base/src/sofe.js'), system.import('simple2!/base/src/sofe.js')])
+				.then(function(values) {
+					// simple1 is overridden in the chained-with-overrides.json manifest file to really point to simple2.js
+					expect(values[0]()).toBe('kwayis');
+
+					// simple2 is not overriden in the chained-with-overrides.json manifest file, so it still points to simple2.js
+					expect(values[1]()).toBe('kwayis');
+					run();
+				})
+				.catch(function(err) {
+					expect(false).toBe(err);
+					run();
+				});
+		});
+
+		it('should fail if the chained manifests have circular dependencies', function(run) {
+			system = new System.constructor();
+
+			system.config({
+				sofe: {
+					manifestUrl: root + '/test/manifests/chained-circular.json'
+				}
+			});
+
+			system.import('deepRelative!/base/src/sofe.js')
+				.then(function(something) {
+					expect(false).toBe("Import should have failed")
+					run();
+				})
+				.catch(function(err) {
+					expect(err.message.split('\n')[0]).toBe("Cannot load manifest -- circular chain of sofe manifests, 'http://localhost:9876/base/test/manifests/chained-circular.json' detected twice in chain.");
+					run();
+				});
+		});
+
+		it('should fail if the chained manifest file is invalid', function(run) {
+			system = new System.constructor();
+
+			system.config({
+				sofe: {
+					manifestUrl: root + '/test/manifests/chained-manifest-to-malformed.json'
+				}
+			});
+
+			system.import('deepRelative!/base/src/sofe.js')
+				.then(function(something) {
+					expect(false).toBe("Import should fail");
+					run();
+				})
+				.catch(function(err) {
+					expect(err.message.split('\n')[0]).toBe('Invalid manifest: must be parseable JSON');
+					run();
+				});
+		});
 	});
 });

@@ -1,4 +1,4 @@
-let cachedRemoteManifestPromise;
+let cachedRemoteManifestPromise = {};
 const hasWindow = typeof window !== 'undefined';
 
 /**
@@ -10,10 +10,10 @@ const hasWindow = typeof window !== 'undefined';
  * @param {Object} config the sofe configuration object
  * @return {Promise} A promise which is resolved with a service manifest.
  */
-export function getManifest(config) {
+export function getManifest(config, visitedManifestUrls = []) {
 	// Don't fetch the manifest twice
-	if (cachedRemoteManifestPromise) {
-		return cachedRemoteManifestPromise;
+	if (config.manifestUrl && cachedRemoteManifestPromise[config.manifestUrl]) {
+		return cachedRemoteManifestPromise[config.manifestUrl];
 	}
 
 	const promise = new Promise((resolve, reject) => {
@@ -35,21 +35,64 @@ export function getManifest(config) {
 						xhrFailed();
 						return;
 					}
-					if (json && json.sofe && json.sofe.manifest) {
-						const cachedRemoteManifest = {
-							...json.sofe.manifest, ...staticManifest
-						};
 
-						if (hasWindow) {
-							window.sofe.cachedRemoteManifest = cachedRemoteManifest;
+					visitedManifestUrls.push(config.manifestUrl);
+
+					if (json && json.sofe) {
+						// First check if this manifest points to another manifest
+						if (typeof json.sofe.manifestUrl === 'string') {
+							if (visitedManifestUrls.indexOf(json.sofe.manifestUrl) >= 0) {
+								reject(
+									new Error(`Cannot load manifest -- circular chain of sofe manifests, '${json.sofe.manifestUrl}' detected twice in chain.`)
+								)
+							} else {
+								getManifest(json.sofe, visitedManifestUrls)
+								.then(chainedManifest => {
+									if (config.manifest === Object(config.manifest)) {
+										resolve({
+											...chainedManifest,
+											...config.manifest
+										});
+									} else {
+										resolve(chainedManifest);
+									}
+								})
+								.catch(err => {reject(err)});
+							}
 						}
+						// Otherwise make sure this manifest actually is a manifest
+						else if (json.sofe.manifest) {
+							/* Ensure that the manifest is an object, without lodash. See
+							 * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object
+							 * and http://stackoverflow.com/questions/8511281/check-if-a-variable-is-an-object-in-javascript
+							*/
+							if (json.sofe.manifest === Object(json.sofe.manifest)) {
+								const cachedRemoteManifest = {
+									...json.sofe.manifest, ...staticManifest
+								};
 
-						resolve(cachedRemoteManifest);
+								if (hasWindow) {
+									window.sofe.cachedRemoteManifest = cachedRemoteManifest;
+								}
+
+								resolve(cachedRemoteManifest);
+							} else {
+								reject(
+									new Error(`Invalid manifest JSON at '${config.manifestUrl}': the 'manifest' property must be a plain object`)
+								)
+							}
+						} else {
+							reject(
+								new Error(`Invalid manifest JSON at '${config.manifestUrl}': there must either be a 'sofe.manifest' object or 'sofe.manifestUrl' string`)
+							)
+						}
 					} else {
 						reject(
-							new Error('Invalid manifest JSON: must include a sofe attribute with a manifest object')
+							new Error(`Invalid manifest JSON at '${config.manifestUrl}': a manifest must include a sofe attribute`)
 						);
 					}
+				} else {
+					xhrFailed();
 				}
 			}
 
@@ -64,11 +107,13 @@ export function getManifest(config) {
 		}
 	});
 
-	cachedRemoteManifestPromise = promise;
+	if (config.manifestUrl) {
+		cachedRemoteManifestPromise[config.manifestUrl] = promise;
+	}
 
 	return promise;
 }
 
 export function clearManifest() {
-	cachedRemoteManifestPromise = window.sofe.cachedRemoteManifest = null;
+	cachedRemoteManifestPromise = window.sofe.cachedRemoteManifest = {};
 }

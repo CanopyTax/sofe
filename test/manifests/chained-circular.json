@@ -1,0 +1,5 @@
+{
+	"sofe": {
+		"manifestUrl": "http://localhost:9876/base/test/manifests/chained-circular.json"
+	}
+}
