@@ -179,7 +179,7 @@ System.import('auth!sofe')
 ```
 
 ### When to use `import` instead of `System.import`
-If your application is not bundled, you can use the `import` keyword instead of `System.import(..).then((res) => ...)`
+If your application is not bundled, you can use the `import` keyword instead of `System.import(..).then((res) => ...)`. Additionally, if your application *is* bundled, you can still use `import` if you [use the sofe-babel-plugin](https://github.com/CanopyTax/sofe-babel-plugin#1-webpack-workflow)
 ```javascript
 import auth from 'auth!sofe';
 // do something with auth service
