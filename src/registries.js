@@ -1,4 +1,4 @@
-const CORS_URL = 'http://cors.maxogden.com';
+const CORS_URL = 'https://cors.maxogden.com';
 const NPM_CDN = 'https://npmcdn.com';
 const hasWindow = typeof window !== 'undefined';
 
