@@ -25,7 +25,7 @@ function getCorsUrl() {
  */
 	export function getUrlFromRegistry(service, config) {
 		return new Promise(function(resolve, reject) {
-			const requestUrl = getRegistryUrl(config) + '/' + service;
+			const requestUrl = `${NPM_CDN}/${service}/package.json`;
 
 			if (!hasWindow) {
 				return resolve(
@@ -53,11 +53,10 @@ function getCorsUrl() {
 						resolve(json.sofe.url);
 					} else {
 						// The registry is an NPM registry
-						const version = json['dist-tags'].latest;
-						const pkg = json.versions[version];
+						const version = json.version;
 
-						if (pkg.sofe && pkg.sofe.url) {
-							resolve(pkg.sofe.url);
+						if (json.sofe && json.sofe.url) {
+							resolve(json.sofe.url);
 						} else {
 							resolve(
 								`${NPM_CDN}/${service}@${version}`
