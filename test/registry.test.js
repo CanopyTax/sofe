@@ -27,21 +27,6 @@ describe('registry resolution', function() {
 			});
 	});
 
-	it('should resolve a service with a npm registry', function(run) {
-
-		system.config({
-			sofe: {
-				registry: root + '/test/npm'
-			}
-		});
-
-		system.import('simple-remote!/base/src/sofe.js')
-			.then(function(simple) {
-				expect(simple()).toBe('mumtaz');
-				run();
-			});
-	});
-
 	it('should throw an error for a bad registry json response', function(run) {
 
 		system.config({
