@@ -17,7 +17,7 @@ let serviceMap = {};
  */
 System.normalize = function(name, parentName, parentAddress) {
 	// If the module is loaded by a parent referencing !sofe, treat it is as a sofe service
-	if (parentName && parentName.match(/sofe/)) {
+	if (parentName && parentName.match(/sofe(@[0-9a-zA-Z\-\.]+)?\.js$/)) {
 		if (name.match(/sofe/)) {
 			return systemNormalize.call(this, name, parentName, parentAddress);
 		} else {
