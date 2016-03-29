@@ -49,7 +49,7 @@ function getRegistryUrl(config) {
 							resolve(json.sofe.url);
 						} else {
 							resolve(
-								`${NPM_CDN}/${service}@${version}`
+								`${NPM_CDN}/${service}`
 							);
 						}
 					}
