@@ -9,4 +9,5 @@
 1. Encourages re-use
 1. Less framework lock-in
 
+
 More on the motivation behind sofe: [https://medium.com/@blittle/a-case-for-soa-in-the-browser-f777a9f139b2](https://medium.com/@blittle/a-case-for-soa-in-the-browser-f777a9f139b2)
