@@ -11,7 +11,7 @@ More on the [motivation for SOA in the browser](docs/motivation.md)
 
 ### Getting Started
 1. [Setup SystemJS and JSPM](http://jspm.io/docs/getting-started.html)
-2. Configure SystemJS to use the sofe plugin
+2. Configure SystemJS to use the sofe plugin:
 
   ```bash
   jspm install sofe=npm:sofe
@@ -48,7 +48,7 @@ Republish a new sofe URL to npm whenever you want to update the location of your
 
 ### Services in production
 Create your own private service by telling sofe how to resolve your service name. Add to your systemjs configuration a manifest
-option to a sofe property or auto-discover services by loading a remote manifest of available services
+option to a sofe property or auto-discover services by loading a remote manifest of available services:
 ```javascript
 System.config({
   sofe: {

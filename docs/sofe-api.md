@@ -26,8 +26,7 @@ For example, a `sofe-hello-world` service could automatically be resolved if `so
 ### Approach #3
 **Put urls to all the services into the `System.config`**
 
-Instead of automatically resolving services, provide a manifest of services with associated service deployable locations.
-
+Instead of automatically resolving services, provide a manifest of services with associated service deployable locations:
 ```javascript
 System.config({
   sofe: {
@@ -99,8 +98,7 @@ hello();
 Alternatively, if your project uses webpack, use the [sofe-babel-plugin](https://github.com/CanopyTax/sofe-babel-plugin) which allows the use of `import` in bundled projects.
 
 ## Full API
-Sofe's configuration API exists within a `System.config` property.
-
+Sofe's configuration API exists within a `System.config` property:
 ```javascript
 System.config({
     sofe: {
