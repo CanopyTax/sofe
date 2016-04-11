@@ -2,7 +2,7 @@ import { getServiceName, resolvePathFromService } from './utils.js';
 import { getUrlFromRegistry } from './registries.js';
 import { getManifest, clearManifest } from './manifest.js';
 
-const config = System.sofe;
+const config = System.sofe || {};
 
 const systemNormalize = System.normalize;
 const hasWindow = typeof window !== 'undefined';
