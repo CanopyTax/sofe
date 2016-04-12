@@ -16,9 +16,12 @@ let serviceMap = {};
  * allow the dependency to load relative to the parent service.
  */
 System.normalize = function(name, parentName, parentAddress) {
+	const isSofePlugin = /.+!sofe.*/;
+	name = name.match(isSofePlugin) ? normalizeSofePlugin(name) : name;
+
 	// If the module is loaded by a parent referencing !sofe, treat it is as a sofe service
 	if (parentName && parentName.match(/sofe(@[0-9a-zA-Z\-\.]+)?\.js$/)) {
-		if (name.match(/sofe/)) {
+		if (name.match(isSofePlugin)) {
 			return systemNormalize.call(this, name, parentName, parentAddress);
 		} else {
 			if (name && name[0] === '.') {
@@ -33,6 +36,10 @@ System.normalize = function(name, parentName, parentAddress) {
 		}
 	} else {
 		return systemNormalize.call(this, name, parentName, parentAddress);
+	}
+
+	function normalizeSofePlugin(name) {
+		return name.slice(0, name.indexOf('!')) + `!sofe`;
 	}
 }
 
