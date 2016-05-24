@@ -57,6 +57,7 @@
     "src"
   ],
   "dependencies": {
+    "jspm-loader-css": "github:meomix/jspm-loader-css",
     "path-browserify": "0.0.0"
   }
 }
