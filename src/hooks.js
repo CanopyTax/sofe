@@ -2,9 +2,6 @@ import { getServiceName, resolvePathFromService } from './utils.js';
 import { getUrlFromRegistry } from './registries.js';
 import { getManifest, clearManifest } from './manifest.js';
 
-import Plugins from 'jspm-loader-css/src/plugins.js'
-import Loader from 'jspm-loader-css/src/loader.js'
-
 const config = System.sofe || {};
 
 const systemNormalize = System.normalize;
@@ -105,17 +102,18 @@ export function locate(load) {
 }
 
 export function fetch(load, systemFetch) {
-	debugger;
 	if (load.name.indexOf('css') > -1) {
-		const plugins = [
-			Plugins.default.values,
-			Plugins.default.localByDefault,
-			Plugins.default.extractImports,
-			Plugins.default.scope
-		];
+		if (!hasWindow) {
+			return Promise.resolve('');
+		}
 
-		const loader = new Loader.default(plugins);
-		return loader.fetch.apply(this, arguments);
+		return new Promise((resolve) => {
+			System.import('sofe-cssmodules/lib/browserLoader.js')
+				.then((Loader) => {
+					const loader = new Loader.default();
+					return resolve(loader.fetch.call(this, load, systemFetch));
+				});
+		});
 
 	} else {
 		return systemFetch.apply(this, arguments);
