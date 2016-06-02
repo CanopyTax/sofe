@@ -107,12 +107,13 @@ export function fetch(load, systemFetch) {
 			return Promise.resolve('');
 		}
 
-		return new Promise((resolve) => {
+		return new Promise((resolve, reject) => {
 			System.import('sofe-cssmodules/lib/browserLoader.js')
 				.then((Loader) => {
 					const loader = new Loader.default();
 					return resolve(loader.fetch.call(this, load, systemFetch));
-				});
+				})
+				.catch(reject);
 		});
 
 	} else {
