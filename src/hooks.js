@@ -10,6 +10,7 @@ const systemLocate = System.locate;
 const hasWindow = typeof window !== 'undefined';
 
 let serviceMap = {};
+let serviceNames = [];
 
 /**
  * Override the default System.normalize
@@ -45,6 +46,18 @@ export function normalize(name, parentName, parentAddress) {
 	}
 }
 
+export function isOverride() {
+	return serviceNames.reduce(toIsOverriden, false);
+
+	function toIsOverriden(isOverride, serviceName) {
+		if (isOverride) return isOverride;
+		else return !!(hasWindow && (
+			window.localStorage.getItem(`sofe:${serviceName}`) ||
+			window.sessionStorage.getItem(`sofe:${serviceName}`)
+		));
+	}
+}
+
 /**
  * Override SystemJS loader locate method
  * @param {Object} load Load object from System.js loader
@@ -56,6 +69,7 @@ export function locate(load) {
 	const isSofePlugin = /.+!sofe.*/;
 
 	let service = getServiceName(load.address);
+	addService(service);
 
 	return new Promise((resolve, reject) => {
 		//first check session storage (since it is very transient)
@@ -118,6 +132,12 @@ export function fetch(load, systemFetch) {
 
 	} else {
 		return systemFetch.apply(this, arguments);
+	}
+}
+
+function addService(service) {
+	if (serviceNames.indexOf(service) === -1) {
+		serviceNames.push(service);
 	}
 }
 
