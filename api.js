@@ -1,7 +1,7 @@
 import { applyMiddleware, isOverride, getManifests } from 'sofe';
 
 // All hooks
-const canopyEnvsMiddleware = manifests => (preLocateLoad, preLocate) => {
+const canopyEnvsMiddleware = () => (preLocateLoad, preLocate) => {
   preLocate(preLocateLoad);
 	return (postLocateLoad, postLocate) => {
 		postLocate(postLocateLoad);
@@ -11,11 +11,11 @@ const canopyEnvsMiddleware = manifests => (preLocateLoad, preLocate) => {
 	};
 }
 
-const otherMiddleware = manifests => (preLocateLoad, preLocate) => {
+const otherMiddleware = () => (preLocateLoad, preLocate) => {
   preLocate(preLocateLoad);
 }
 
-const logMiddleWare = manifests => preLocateLoad => {
+const logMiddleWare = () => preLocateLoad => {
 	console.log('preLocate');
 	return postLocateLoad => {
 		console.log('postLocate');
@@ -25,7 +25,7 @@ const logMiddleWare = manifests => preLocateLoad => {
 	};
 }
 
-applyMiddleware(canopyEnvsMiddleware, otherMiddleware, logMiddleWare)
+applyMiddleware(canopyEnvsMiddleware, otherMiddleware, logMiddleWare);
 
 getManifests().then((manifests) => {
 	console.log(manifests);

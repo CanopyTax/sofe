@@ -1,6 +1,7 @@
 import { getServiceName, resolvePathFromService } from './utils.js';
 import { getUrlFromRegistry } from './registries.js';
 import { getManifest, clearManifest } from './manifest.js';
+import { stepMiddleware } from './middleware.js';
 
 const config = System.sofe || {};
 
@@ -9,6 +10,7 @@ const systemLocate = System.locate;
 
 const hasWindow = typeof window !== 'undefined';
 
+let allMiddleware = [];
 let serviceMap = {};
 let serviceNames = [];
 
@@ -68,29 +70,31 @@ export function isOverride() {
 export function locate(load) {
 	const isSofePlugin = /.+!sofe.*/;
 
-	let service = getServiceName(load.address);
-	addService(service);
-
 	return new Promise((resolve, reject) => {
-		//first check session storage (since it is very transient)
-		if (hasWindow && window.sessionStorage && window.sessionStorage.getItem(`sofe:${service}`)) {
-			console.log(`Using session storage override to resolve sofe service '${service}' to url '${window.sessionStorage.getItem(`sofe:${service}`)}'`);
-			console.log(`Run window.sessionStorage.removeItem('sofe:${service}') to remove this override`);
-			const url = window.sessionStorage.getItem(`sofe:${service}`);
-			serviceMap[load.name] = url;
-			resolve(url);
-		}
-		//otherwise check local storage (since it is less transient)
-		else if (hasWindow && window.localStorage && window.localStorage.getItem(`sofe:${service}`)) {
-			console.log(`Using local storage override to resolve sofe service '${service}' to url '${window.localStorage.getItem(`sofe:${service}`)}'`);
-			console.log(`Run window.localStorage.removeItem('sofe:${service}') to remove this override`);
-			const url = window.localStorage.getItem(`sofe:${service}`);
-			serviceMap[load.name] = url;
-			resolve(url);
-		}
-		//otherwise check manifest
-		else {
-			getManifest(config)
+
+		stepMiddleware(allMiddleware, load, function(load, newMiddleware) {
+			let service = getServiceName(load.address);
+			addService(service);
+
+			//first check session storage (since it is very transient)
+			if (hasWindow && window.sessionStorage && window.sessionStorage.getItem(`sofe:${service}`)) {
+				console.log(`Using session storage override to resolve sofe service '${service}' to url '${window.sessionStorage.getItem(`sofe:${service}`)}'`);
+										console.log(`Run window.sessionStorage.removeItem('sofe:${service}') to remove this override`);
+										const url = window.sessionStorage.getItem(`sofe:${service}`);
+										serviceMap[load.name] = url;
+										resolve(url);
+			}
+			//otherwise check local storage (since it is less transient)
+			else if (hasWindow && window.localStorage && window.localStorage.getItem(`sofe:${service}`)) {
+				console.log(`Using local storage override to resolve sofe service '${service}' to url '${window.localStorage.getItem(`sofe:${service}`)}'`);
+										console.log(`Run window.localStorage.removeItem('sofe:${service}') to remove this override`);
+										const url = window.localStorage.getItem(`sofe:${service}`);
+										serviceMap[load.name] = url;
+										resolve(url);
+			}
+			//otherwise check manifest
+			else {
+				getManifest(config)
 				.then((manifest) => {
 					// First try and resolve the service with the manifest,
 					// otherwise resolve by requesting the registry
@@ -111,8 +115,13 @@ export function locate(load) {
 				.catch((error) => {
 					reject(error);
 				});
-		}
+			}
+		});
 	})
+}
+
+export function setMiddleWare(middleware) {
+	allMiddleware = middleware;
 }
 
 export function fetch(load, systemFetch) {
@@ -145,6 +154,7 @@ if (typeof window !== 'undefined') {
 	window.sofe = {
 		clearCache: function() {
 			serviceMap = {};
+			allMiddleware = [];
 			clearManifest();
 		}
 	}
