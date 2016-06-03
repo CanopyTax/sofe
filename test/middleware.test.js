@@ -1,4 +1,4 @@
-fdescribe('middleware', function() {
+describe('middleware', function() {
 	let system, middleware;
 
 	beforeEach(function(run) {

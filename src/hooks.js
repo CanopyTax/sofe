@@ -13,6 +13,9 @@ const hasWindow = typeof window !== 'undefined';
 let allMiddleware = [];
 let serviceMap = {};
 let serviceNames = [];
+let middlewareMap = {};
+let middlewareId = 0;
+let middlewareTracker;
 
 /**
  * Override the default System.normalize
@@ -70,27 +73,38 @@ export function isOverride() {
 export function locate(load) {
 	const isSofePlugin = /.+!sofe.*/;
 
-	return new Promise((resolve, reject) => {
+	middlewareId++;
+	let id = middlewareId;
+
+	return new Promise((resolvePromise, reject) => {
 
 		stepMiddleware(allMiddleware, load, function(load, newMiddleware) {
+			function resolve(url) {
+				stepMiddleware(newMiddleware, url, function(newUrl, newMiddleware) {
+					middlewareMap[id] = newMiddleware;
+					middlewareTracker = id;
+					resolvePromise(newUrl);
+				});
+			}
+
 			let service = getServiceName(load.address);
 			addService(service);
 
 			//first check session storage (since it is very transient)
 			if (hasWindow && window.sessionStorage && window.sessionStorage.getItem(`sofe:${service}`)) {
 				console.log(`Using session storage override to resolve sofe service '${service}' to url '${window.sessionStorage.getItem(`sofe:${service}`)}'`);
-										console.log(`Run window.sessionStorage.removeItem('sofe:${service}') to remove this override`);
-										const url = window.sessionStorage.getItem(`sofe:${service}`);
-										serviceMap[load.name] = url;
-										resolve(url);
+				console.log(`Run window.sessionStorage.removeItem('sofe:${service}') to remove this override`);
+				const url = window.sessionStorage.getItem(`sofe:${service}`);
+				serviceMap[load.name] = url;
+				resolve(url);
 			}
 			//otherwise check local storage (since it is less transient)
 			else if (hasWindow && window.localStorage && window.localStorage.getItem(`sofe:${service}`)) {
 				console.log(`Using local storage override to resolve sofe service '${service}' to url '${window.localStorage.getItem(`sofe:${service}`)}'`);
-										console.log(`Run window.localStorage.removeItem('sofe:${service}') to remove this override`);
-										const url = window.localStorage.getItem(`sofe:${service}`);
-										serviceMap[load.name] = url;
-										resolve(url);
+				console.log(`Run window.localStorage.removeItem('sofe:${service}') to remove this override`);
+				const url = window.localStorage.getItem(`sofe:${service}`);
+				serviceMap[load.name] = url;
+				resolve(url);
 			}
 			//otherwise check manifest
 			else {
@@ -125,23 +139,29 @@ export function setMiddleWare(middleware) {
 }
 
 export function fetch(load, systemFetch) {
-	if (load.name.indexOf('css') > -1) {
-		if (!hasWindow) {
-			return Promise.resolve('');
-		}
-
-		return new Promise((resolve, reject) => {
-			System.import('sofe-cssmodules/lib/browserLoader.js')
-				.then((Loader) => {
-					const loader = new Loader.default();
-					return resolve(loader.fetch.call(this, load, systemFetch));
-				})
-				.catch(reject);
+	return new Promise((resolve, reject) => {
+		stepMiddleware(middlewareMap[middlewareTracker], load, (load) => {
+			resolve(systemFetch(load));
 		});
+	});
 
-	} else {
-		return systemFetch.apply(this, arguments);
-	}
+	// if (load.name.indexOf('css') > -1) {
+	// 	if (!hasWindow) {
+	// 		return Promise.resolve('');
+	// 	}
+  //
+	// 	return new Promise((resolve, reject) => {
+	// 		System.import('sofe-cssmodules/lib/browserLoader.js')
+	// 			.then((Loader) => {
+	// 				const loader = new Loader.default();
+	// 				return resolve(loader.fetch.call(this, load, systemFetch));
+	// 			})
+	// 			.catch(reject);
+	// 	});
+  //
+	// } else {
+	// 	return systemFetch.apply(this, arguments);
+	// }
 }
 
 function addService(service) {
