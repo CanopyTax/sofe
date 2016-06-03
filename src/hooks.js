@@ -15,7 +15,7 @@ let serviceMap = {};
 let serviceNames = [];
 let middlewareMap = {};
 let middlewareId = 0;
-let middlewareTracker;
+let middlewareTracker = 0;
 
 /**
  * Override the default System.normalize
@@ -77,7 +77,6 @@ export function locate(load) {
 	let id = middlewareId;
 
 	return new Promise((resolvePromise, reject) => {
-
 		stepMiddleware(allMiddleware, load, function(load, newMiddleware) {
 			function resolve(url) {
 				stepMiddleware(newMiddleware, url, function(newUrl, newMiddleware) {
@@ -140,7 +139,10 @@ export function setMiddleWare(middleware) {
 
 export function fetch(load, systemFetch) {
 	return new Promise((resolve, reject) => {
-		stepMiddleware(middlewareMap[middlewareTracker], load, (load) => {
+		const middleware = middlewareMap[middlewareTracker] || [];
+		delete middlewareMap[middlewareTracker];
+
+		stepMiddleware(middleware, load, (load) => {
 			resolve(systemFetch(load));
 		});
 	});
@@ -175,6 +177,7 @@ if (typeof window !== 'undefined') {
 		clearCache: function() {
 			serviceMap = {};
 			allMiddleware = [];
+			middlewareMap = {};
 			clearManifest();
 		}
 	}

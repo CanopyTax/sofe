@@ -1,7 +1,5 @@
-
-import { normalize, locate, fetch, isOverride } from './hooks.js';
+import { normalize, locate, fetch, isOverride, setMiddleWare } from './hooks.js';
 import { getAllManifests as _getAllManifests } from './manifest.js';
-import { setMiddleWare } from './middleware.js';
 
 System.normalize = normalize;
 
@@ -11,7 +9,7 @@ export function getAllManifests() {
 
 export function applyMiddleware(...middleware) {
 	let chain = middleware.map(middleware => middleware());
-	setMiddleWare(middleware);
+	setMiddleWare(chain);
 }
 
 export { locate, fetch, isOverride };
