@@ -98,6 +98,7 @@ hello();
 Alternatively, if your project uses webpack, use the [sofe-babel-plugin](https://github.com/CanopyTax/sofe-babel-plugin) which allows the use of `import` in bundled projects.
 
 ## Full API
+### Configuration
 Sofe's configuration API exists within a `System.config` property:
 ```javascript
 System.config({
@@ -117,3 +118,93 @@ System.config({
   }
 }
 ```
+
+### API
+#### getAllManifests(): Promise
+Get manifest information for available services.
+```javascript
+import { getAllManifests } from 'sofe';
+
+getAllManifests().then(manifests => {
+	manifests === {
+		flat: {
+			// Flat map of available services and urls
+		},
+		all: {
+			// Tree structure of all manifests
+		}
+	}
+});
+```
+
+#### isOverride(): Boolean
+Returns whether or not any services have been overriden by local or
+session storage.
+
+```javascript
+import { isOverride } from 'sofe';
+
+if (isOverride()) {
+	...
+}
+```
+
+#### Middleware
+Sofe middleware takes inspiration from the [redux middleware
+api](http://redux.js.org/docs/advanced/Middleware.html)
+
+Essentially the middleware allows you to hook into three separate
+life-cycle hooks which are executed in the following order:
+
+1. `preLocate` - Executed before sofe resolves a service name into a url
+1. `postLocate` - Executed after sofe resolves a service name into a url
+1. `fetch` - Executed after everything before the module is fetched
+
+Middleware is defined as a higher-order function with each order
+representing a step in the resolution life-cycle. Multiple middleware's
+are executed in the order in which they are defined.
+
+Example:
+
+```javascript
+import { applyMiddleware } from 'sofe';
+
+// All hooks
+const canopyEnvsMiddleware = () => (preLocateLoad, preLocate) => {
+    preLocate(preLocateLoad);
+    return (postLocateLoad, postLocate) => {
+        postLocate(postLocateLoad);
+        return (fetchLoad, fetch) => {
+            fetch(fetchLoad);
+        }
+    };
+}
+
+// You don't need to call the locate methods if your
+// middleware have only one argument
+const logMiddleware = () => (preLocateLoad) => {
+    console.log('pre locate', preLocateLoad);
+    return (postLocateLoad) => {
+        console.log('post locate', postLocateLoad);
+        return (fetchLoad) => {
+            console.log('fetch', fetchLoad);
+            fetch(fetchLoad);
+        }
+    };
+}
+
+// If you only care about the first life-cycle
+const otherMiddleware = () => (preLocateLoad, preLocate) => {
+  preLocate(preLocateLoad);
+}
+
+// If you only care about the last lifecycle
+const yourMiddleware = () => () => () => (fetchLoad, fetch) => {
+	fetch(fetchLoad);
+}
+
+applyMiddleware(canopyEnvsMiddleware, logMiddleware, otherMiddleware, yourMiddleware)
+```
+
+Middleware execution order executes each middleware at each level in
+order before proceeding to the next level.

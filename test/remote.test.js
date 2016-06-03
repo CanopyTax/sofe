@@ -338,7 +338,7 @@ describe('remote resolution', function() {
 					values[2].getAllManifests()
 						.then(function(resp) {
 							expect(resp).toEqual({
-								"manifest": {},
+								"flat": {},
 								"all": {
 									"static": {
 										"manifest": {
@@ -389,7 +389,7 @@ describe('remote resolution', function() {
 					values[2].getAllManifests()
 						.then(function(resp) {
 							expect(resp).toEqual({
-								"manifest": {
+								"flat": {
 
 								},
 								"all": {
@@ -449,7 +449,7 @@ describe('remote resolution', function() {
 					values[2].getAllManifests()
 						.then(function(resp) {
 							expect(resp).toEqual({
-								"manifest": {
+								"flat": {
 
 								},
 								"all": {

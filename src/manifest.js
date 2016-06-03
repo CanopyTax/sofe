@@ -151,7 +151,7 @@ export function getAllManifests(config) {
 		getManifest(config)
 			.then((manifest) => {
 				resolve({
-					manifest,
+					flat: manifest,
 					all: { ...cachedManifests }
 				});
 			})
