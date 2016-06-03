@@ -2,7 +2,18 @@ export function stepMiddleware(middleware, load, action) {
 	if (middleware.length === 0) return action(load, []);
 
 	// If there are any undefined middleware, replace them with a noop
-	middleware = middleware.map(f => f ? f : (load, next) => { next(load) });
+	middleware = middleware
+		.map(f => f ? f : (load, next) => { next(load) })
+		.map(function toMiddleWareThatAlwaysCallNext(f) {
+			if (f.length === 1) {
+				return (load, next) => {
+					f(load);
+					next(load);
+				}
+			} else {
+				return f;
+			}
+		});
 
 	if (middleware.length === 1) {
 		let next = middleware[0](load, (load) => {

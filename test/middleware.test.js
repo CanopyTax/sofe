@@ -47,6 +47,21 @@ describe('middleware', function() {
 			});
 		});
 
+		it('should not require next to be called for one middleware', function(run) {
+			middleware.stepMiddleware([function(load) {
+				expect(load).toBe('load');
+				return (load) => {
+					expect(load).toBe('load');
+				}
+			}], 'load', (load, newMiddleware) => {
+				expect(load).toBe('load');
+				middleware.stepMiddleware(newMiddleware, load, function(load, newMiddleware) {
+					expect(load).toBe('load');
+					run();
+				});
+			});
+		});
+
 		it('should execute multiple middlewares', function(run) {
 			middleware.stepMiddleware([
 				function(load, next) {
@@ -64,30 +79,24 @@ describe('middleware', function() {
 			});
 		});
 
-		it('should chain for multiple middlewares', function(run) {
+		it('should not require next to be called for multiple middleware', function(run) {
 			middleware.stepMiddleware([
-				function(load, next) {
+				function(load) {
 					expect(load).toBe('load');
-					next('load2');
-
-					return (load, next) => {
-						expect(load).toBe('load4');
-						next('load5');
+					return (load) => {
+						expect(load).toBe('load');
 					}
 				},
-				function(load, next) {
-					expect(load).toBe('load2');
-					next('load3');
-
-					return (load, next) => {
-						expect(load).toBe('load5');
-						next('load6');
+				function(load) {
+					expect(load).toBe('load');
+					return (load) => {
+						expect(load).toBe('load');
 					}
 				}
 			], 'load', (load, newMiddleware) => {
-				expect(load).toBe('load3');
-				middleware.stepMiddleware(newMiddleware, 'load4', (load, newMiddleware) => {
-					expect(load).toBe('load6');
+				expect(load).toBe('load');
+				middleware.stepMiddleware(newMiddleware, load, (load, newMiddleware) => {
+					expect(load).toBe('load');
 					expect(newMiddleware).toEqual([undefined, undefined]);
 					run();
 				});
@@ -157,6 +166,39 @@ describe('middleware', function() {
 				expect(load).toBe('load4');
 				middleware.stepMiddleware(newMiddleware, 'load5', (load, newMiddleware) => {
 					expect(load).toBe('load8');
+					expect(newMiddleware).toEqual([undefined, undefined, undefined]);
+					run();
+				});
+			});
+		});
+
+		it('should not require next to be called for many middlewares', function(run) {
+			middleware.stepMiddleware([
+				function(load) {
+					expect(load).toBe('load');
+
+					return (load) => {
+						expect(load).toBe('load');
+					}
+				},
+				function(load) {
+					expect(load).toBe('load');
+
+					return (load) => {
+						expect(load).toBe('load');
+					}
+				},
+				function(load) {
+					expect(load).toBe('load');
+
+					return (load) => {
+						expect(load).toBe('load');
+					}
+				}
+			], 'load', (load, newMiddleware) => {
+				expect(load).toBe('load');
+				middleware.stepMiddleware(newMiddleware, load, (load, newMiddleware) => {
+					expect(load).toBe('load');
 					expect(newMiddleware).toEqual([undefined, undefined, undefined]);
 					run();
 				});
