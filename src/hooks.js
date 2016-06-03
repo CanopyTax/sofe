@@ -146,24 +146,6 @@ export function fetch(load, systemFetch) {
 			resolve(systemFetch(load));
 		});
 	});
-
-	// if (load.name.indexOf('css') > -1) {
-	// 	if (!hasWindow) {
-	// 		return Promise.resolve('');
-	// 	}
-  //
-	// 	return new Promise((resolve, reject) => {
-	// 		System.import('sofe-cssmodules/lib/browserLoader.js')
-	// 			.then((Loader) => {
-	// 				const loader = new Loader.default();
-	// 				return resolve(loader.fetch.call(this, load, systemFetch));
-	// 			})
-	// 			.catch(reject);
-	// 	});
-  //
-	// } else {
-	// 	return systemFetch.apply(this, arguments);
-	// }
 }
 
 function addService(service) {
