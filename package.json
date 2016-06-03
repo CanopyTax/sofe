@@ -5,7 +5,7 @@
   "main": "dist/sofe.js",
   "scripts": {
     "test": "karma start",
-    "build": "npm run clean && babel src --out-dir lib && node build.js && cp lib/blank.js dist/blank.js",
+    "build": "npm run clean && babel src --out-dir lib && node build.js && cp lib/blank.js dist/blank.js && uglifyjs dist/sofe.js --source-map dist/sofe.min.js.map -o dist/sofe.min.js",
     "rollup": "rollup src/index.js -f cjs -o dist/sofe.js",
     "clean": "rm -rf lib",
     "prepublish": "npm run build",
@@ -50,7 +50,8 @@
     "rollup": "0.21.2",
     "rollup-plugin-commonjs": "1.4.0",
     "rollup-plugin-npm": "1.1.0",
-    "systemjs": "0.19.6"
+    "systemjs": "0.19.6",
+    "uglify-js": "^2.6.2"
   },
   "files": [
     "dist",
