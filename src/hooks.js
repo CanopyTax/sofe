@@ -141,9 +141,22 @@ export function fetch(load, systemFetch) {
 	return new Promise((resolve, reject) => {
 		const middleware = middlewareMap[middlewareTracker] || [];
 		delete middlewareMap[middlewareTracker];
+		let called = false;
 
-		stepMiddleware(middleware, load, (load) => {
-			resolve(systemFetch(load));
+		stepMiddleware(middleware, {
+			systemFetch: function(load) {
+				called = true;
+				return systemFetch(load);
+			},
+			load
+		}, (load) => {
+			load = load.load ? load.load : load;
+
+			if (called) {
+				resolve(load);
+			} else {
+				resolve(systemFetch(load));
+			}
 		});
 	});
 }

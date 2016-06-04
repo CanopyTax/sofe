@@ -151,7 +151,8 @@ if (isOverride()) {
 
 #### Middleware
 Sofe middleware takes inspiration from the [redux middleware
-api](http://redux.js.org/docs/advanced/Middleware.html)
+api](http://redux.js.org/docs/advanced/Middleware.html). We highly
+recommend reading Dan Abramov's above tutorial.
 
 Essentially the middleware allows you to hook into three separate
 life-cycle hooks which are executed in the following order:
@@ -160,7 +161,7 @@ life-cycle hooks which are executed in the following order:
 1. `postLocate` - Executed after sofe resolves a service name into a url
 1. `fetch` - Executed after everything before the module is fetched
 
-Middleware is defined as a higher-order function with each order
+Middleware is defined as a higher-order function with each level
 representing a step in the resolution life-cycle. Multiple middleware's
 are executed in the order in which they are defined.
 
@@ -170,12 +171,12 @@ Example:
 import { applyMiddleware } from 'sofe';
 
 // All hooks
-const canopyEnvsMiddleware = () => (preLocateLoad, preLocate) => {
-    preLocate(preLocateLoad);
-    return (postLocateLoad, postLocate) => {
-        postLocate(postLocateLoad);
-        return (fetchLoad, fetch) => {
-            fetch(fetchLoad);
+const canopyEnvsMiddleware = () => (preLocateLoad, preLocateNext) => {
+    preLocateNext(preLocateLoad);
+    return (postLocateLoad, postLocateNext) => {
+        postLocateNext(postLocateLoad);
+        return ({load, systemFetch}, next) => {
+            next(load);
         }
     };
 }
@@ -186,25 +187,24 @@ const logMiddleware = () => (preLocateLoad) => {
     console.log('pre locate', preLocateLoad);
     return (postLocateLoad) => {
         console.log('post locate', postLocateLoad);
-        return (fetchLoad) => {
-            console.log('fetch', fetchLoad);
-            fetch(fetchLoad);
+        return ({load}) => {
+            console.log('fetch', load);
         }
     };
 }
 
 // If you only care about the first life-cycle
-const otherMiddleware = () => (preLocateLoad, preLocate) => {
-  preLocate(preLocateLoad);
+const otherMiddleware = () => (preLocateLoad, preLocateNext) => {
+  preLocateNext(preLocateLoad);
 }
 
 // If you only care about the last lifecycle
-const yourMiddleware = () => () => () => (fetchLoad, fetch) => {
-	fetch(fetchLoad);
+const yourMiddleware = () => () => () => ({load, systemFetch}, next) => {
+	systemFetch(load).then(next);
 }
 
 applyMiddleware(canopyEnvsMiddleware, logMiddleware, otherMiddleware, yourMiddleware)
 ```
 
-Middleware execution order executes each middleware at each level in
+Middleware execution order runs each middleware at each level in
 order before proceeding to the next level.

@@ -395,9 +395,9 @@ describe('middleware', function() {
 
 						return (postLocateLoad, postLocate) => {
 							postLocate(postLocateLoad);
-							return (fetchLoad, fetchLocate) => {
-								fetchLoad.address = root + '/test/services/simple1.js';
-								fetchLocate(fetchLoad);
+							return ({load, systemFetch}, next) => {
+								load.address = root + '/test/services/simple1.js';
+								systemFetch(load).then(next);
 							}
 						}
 					})
@@ -440,13 +440,13 @@ describe('middleware', function() {
 								postLocate(postLocateLoad);
 							}
 
-							return (fetchLoad, fetchLocate) => {
-								if (fetchLoad.address.indexOf('north') > -1) {
-									fetchLoad.address = root + '/test/services/simple1.js';
-									fetchLocate(fetchLoad);
+							return ({load}, next) => {
+								if (load.address.indexOf('north') > -1) {
+									load.address = root + '/test/services/simple1.js';
+									next(load);
 								} else {
-									fetchLoad.address = root + '/test/services/simple2.js';
-									setTimeout(() => fetchLocate(fetchLoad), 120);
+									load.address = root + '/test/services/simple2.js';
+									setTimeout(() => next(load), 120);
 								}
 							}
 						}
