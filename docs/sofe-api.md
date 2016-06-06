@@ -137,14 +137,17 @@ getAllManifests().then(manifests => {
 });
 ```
 
-#### isOverride(): Boolean
-Returns whether or not any services have been overriden by local or
-session storage.
+#### isOverride([service]): Boolean
+Returns whether or not any services have been overriden by local or session storage. Optionally, if a service name is passed, return whether or not that individual service has been overriden.
 
 ```javascript
 import { isOverride } from 'sofe';
 
 if (isOverride()) {
+	...
+}
+
+if (isOverride('lodash')) {
 	...
 }
 ```

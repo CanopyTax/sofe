@@ -338,7 +338,16 @@ describe('remote resolution', function() {
 					values[2].getAllManifests()
 						.then(function(resp) {
 							expect(resp).toEqual({
-								"flat": {},
+								"flat": {
+									"simple": "http:\/\/localhost:9876\/base\/test\/services\/simple1.js",
+									"simple2": "http:\/\/localhost:9876\/base\/test\/services\/simple2.js",
+									"simpleDependency": "http:\/\/localhost:9876\/base\/test\/services\/simpleDependency.js",
+									"deep": "http:\/\/localhost:9876\/base\/test\/services\/deepDependency.js",
+									"relative": "http:\/\/localhost:9876\/base\/test\/services\/relativeDependency.js",
+									"deepRelative": "http:\/\/localhost:9876\/base\/test\/services\/deepRelative.js",
+									"simple1": "http:\/\/localhost:9876\/base\/test\/services\/simple2.js",
+									"tester": "hi"
+								},
 								"all": {
 									"static": {
 										"manifest": {
@@ -390,7 +399,14 @@ describe('remote resolution', function() {
 						.then(function(resp) {
 							expect(resp).toEqual({
 								"flat": {
-
+									"simple": "http:\/\/localhost:9876\/base\/test\/services\/simple1.js",
+									"simple2": "http:\/\/localhost:9876\/base\/test\/services\/simple2.js",
+									"simpleDependency": "http:\/\/localhost:9876\/base\/test\/services\/simpleDependency.js",
+									"deep": "http:\/\/localhost:9876\/base\/test\/services\/deepDependency.js",
+									"relative": "http:\/\/localhost:9876\/base\/test\/services\/relativeDependency.js",
+									"deepRelative": "http:\/\/localhost:9876\/base\/test\/services\/deepRelative.js",
+									"simple1": "http:\/\/localhost:9876\/base\/test\/services\/simple2.js",
+									"tester": "hi"
 								},
 								"all": {
 									"static": {
@@ -450,7 +466,13 @@ describe('remote resolution', function() {
 						.then(function(resp) {
 							expect(resp).toEqual({
 								"flat": {
-
+									"simple": "http:\/\/localhost:9876\/base\/test\/services\/simple1.js",
+									"simple2": "http:\/\/localhost:9876\/base\/test\/services\/simple2.js",
+									"simpleDependency": "http:\/\/localhost:9876\/base\/test\/services\/simpleDependency.js",
+									"deep": "http:\/\/localhost:9876\/base\/test\/services\/deepDependency.js",
+									"relative": "http:\/\/localhost:9876\/base\/test\/services\/relativeDependency.js",
+									"deepRelative": "http:\/\/localhost:9876\/base\/test\/services\/deepRelative.js",
+									"tester": "hi"
 								},
 								"all": {
 									"static": {

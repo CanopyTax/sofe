@@ -51,8 +51,8 @@ export function normalize(name, parentName, parentAddress) {
 	}
 }
 
-export function isOverride() {
-	return !!serviceOverrides.length;
+export function isOverride(service) {
+	return service ? serviceOverrides.indexOf(service) > -1 : !!serviceOverrides.length;
 }
 
 /**
@@ -134,18 +134,18 @@ export function fetch(load, systemFetch) {
 	return new Promise((resolve, reject) => {
 		const middleware = middlewareMap[middlewareTracker] || [];
 		delete middlewareMap[middlewareTracker];
-		let called = false;
+		let systemFetchAlreadyCalled = false;
 
 		stepMiddleware(middleware, {
 			systemFetch: function(load) {
-				called = true;
+				systemFetchAlreadyCalled = true;
 				return systemFetch(load);
 			},
 			load
 		}, (load) => {
 			load = load.load ? load.load : load;
 
-			if (called) {
+			if (systemFetchAlreadyCalled) {
 				resolve(load);
 			} else {
 				resolve(systemFetch(load));
