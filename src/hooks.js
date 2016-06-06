@@ -12,7 +12,7 @@ const hasWindow = typeof window !== 'undefined';
 
 let allMiddleware = [];
 let serviceMap = {};
-let serviceNames = [];
+let serviceOverrides = [];
 let middlewareMap = {};
 let middlewareId = 0;
 let middlewareTracker = 0;
@@ -52,15 +52,7 @@ export function normalize(name, parentName, parentAddress) {
 }
 
 export function isOverride() {
-	return serviceNames.reduce(toIsOverriden, false);
-
-	function toIsOverriden(isOverride, serviceName) {
-		if (isOverride) return isOverride;
-		else return !!(hasWindow && (
-			window.localStorage.getItem(`sofe:${serviceName}`) ||
-			window.sessionStorage.getItem(`sofe:${serviceName}`)
-		));
-	}
+	return !!serviceOverrides.length;
 }
 
 /**
@@ -87,7 +79,6 @@ export function locate(load) {
 			}
 
 			let service = getServiceName(load.address);
-			addService(service);
 
 			//first check session storage (since it is very transient)
 			if (hasWindow && window.sessionStorage && window.sessionStorage.getItem(`sofe:${service}`)) {
@@ -95,6 +86,7 @@ export function locate(load) {
 				console.log(`Run window.sessionStorage.removeItem('sofe:${service}') to remove this override`);
 				const url = window.sessionStorage.getItem(`sofe:${service}`);
 				serviceMap[load.name] = url;
+				addServiceOverride(service);
 				resolve(url);
 			}
 			//otherwise check local storage (since it is less transient)
@@ -103,6 +95,7 @@ export function locate(load) {
 				console.log(`Run window.localStorage.removeItem('sofe:${service}') to remove this override`);
 				const url = window.localStorage.getItem(`sofe:${service}`);
 				serviceMap[load.name] = url;
+				addServiceOverride(service);
 				resolve(url);
 			}
 			//otherwise check manifest
@@ -161,9 +154,9 @@ export function fetch(load, systemFetch) {
 	});
 }
 
-function addService(service) {
-	if (serviceNames.indexOf(service) === -1) {
-		serviceNames.push(service);
+function addServiceOverride(service) {
+	if (serviceOverrides.indexOf(service) === -1) {
+		serviceOverrides.push(service);
 	}
 }
 
@@ -173,6 +166,7 @@ if (typeof window !== 'undefined') {
 			serviceMap = {};
 			allMiddleware = [];
 			middlewareMap = {};
+			serviceOverrides = [];
 			clearManifest();
 		}
 	}
