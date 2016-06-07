@@ -19,7 +19,7 @@ rollup({
 			// want to include, add it to 'skip'
 			// skip: [ 'some-big-dependency' ],
 		}),
-		commonjs()
+		commonjs(),
 	]
 }).then( function(bundle) {
 	bundle.write({ dest: 'dist/sofe.js', format: 'cjs' })

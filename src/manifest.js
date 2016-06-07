@@ -1,4 +1,5 @@
 let cachedRemoteManifestPromise = {};
+let cachedManifests = {};
 const hasWindow = typeof window !== 'undefined';
 
 /**
@@ -8,9 +9,11 @@ const hasWindow = typeof window !== 'undefined';
  * querying npm for service resolution.
  *
  * @param {Object} config the sofe configuration object
+ * @param {Array} visitedManifestUrls keep track of previously visited urls to detect circular dependencies
+ * @param {String} parent if this is a recursively loaded manifest, who was the parent that loaded it?
  * @return {Promise} A promise which is resolved with a service manifest.
  */
-export function getManifest(config, visitedManifestUrls = []) {
+export function getManifest(config, visitedManifestUrls = [], parent = null) {
 	// Don't fetch the manifest twice
 	if (config.manifestUrl && cachedRemoteManifestPromise[config.manifestUrl]) {
 		return cachedRemoteManifestPromise[config.manifestUrl];
@@ -39,6 +42,34 @@ export function getManifest(config, visitedManifestUrls = []) {
 					visitedManifestUrls.push(config.manifestUrl);
 
 					if (json && json.sofe) {
+
+						// Record manifest tree information
+						if (parent) {
+							cachedManifests[config.manifestUrl] = {
+								manifest: json.sofe.manifest || {},
+								parent
+							};
+
+							if (!cachedManifests[parent]) {
+								cachedManifests[parent] = {
+									manifest: staticManifest,
+									parent: 'static'
+								};
+							}
+						} else {
+							cachedManifests.static = {
+								manifest: staticManifest,
+								parent: null
+							};
+
+							if (!cachedManifests[config.manifestUrl]) {
+								cachedManifests[config.manifestUrl] = {
+									manifest: json.sofe.manifest || {},
+									parent: 'static'
+								}
+							};
+						}
+
 						// First check if this manifest points to another manifest
 						if (typeof json.sofe.manifestUrl === 'string') {
 							if (visitedManifestUrls.indexOf(json.sofe.manifestUrl) >= 0) {
@@ -46,7 +77,7 @@ export function getManifest(config, visitedManifestUrls = []) {
 									new Error(`Cannot load manifest -- circular chain of sofe manifests, '${json.sofe.manifestUrl}' detected twice in chain.`)
 								)
 							} else {
-								getManifest(json.sofe, visitedManifestUrls)
+								getManifest(json.sofe, visitedManifestUrls, config.manifestUrl)
 								.then(chainedManifest => {
 									if (config.manifest === Object(config.manifest)) {
 										resolve({
@@ -67,6 +98,7 @@ export function getManifest(config, visitedManifestUrls = []) {
 							 * and http://stackoverflow.com/questions/8511281/check-if-a-variable-is-an-object-in-javascript
 							*/
 							if (json.sofe.manifest === Object(json.sofe.manifest)) {
+
 								const cachedRemoteManifest = {
 									...json.sofe.manifest, ...staticManifest
 								};
@@ -114,6 +146,20 @@ export function getManifest(config, visitedManifestUrls = []) {
 	return promise;
 }
 
+export function getAllManifests(config) {
+	return new Promise((resolve, reject) => {
+		getManifest(config)
+			.then((manifest) => {
+				resolve({
+					flat: { ...manifest },
+					all: { ...cachedManifests }
+				});
+			})
+			.catch(reject);;
+	});
+}
+
 export function clearManifest() {
 	cachedRemoteManifestPromise = window.sofe.cachedRemoteManifest = {};
+	cachedManifests = {};
 }

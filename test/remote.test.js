@@ -233,6 +233,10 @@ describe('remote resolution', function() {
 	});
 
 	describe('chained manifests', function() {
+		afterEach(function() {
+			window.sofe.clearCache();
+		});
+
 		it('should be able to import a sofe service that is defined in a chained manifest file', function(run) {
 			system = new System.constructor();
 
@@ -316,5 +320,187 @@ describe('remote resolution', function() {
 					run();
 				});
 		});
+
+		it('should return manifests', function(run) {
+			system = new System.constructor();
+
+			system.config({
+				sofe: {
+					manifestUrl: root + '/test/manifests/chained-with-overrides.json',
+					manifest: {
+						tester: 'hi'
+					}
+				}
+			});
+
+			Promise.all([system.import('simple1!/base/src/sofe.js'), system.import('simple2!/base/src/sofe.js'), system.import('/base/src/sofe.js')])
+				.then(function(values) {
+					values[2].getAllManifests()
+						.then(function(resp) {
+							expect(resp).toEqual({
+								"flat": {
+									"simple": "http:\/\/localhost:9876\/base\/test\/services\/simple1.js",
+									"simple2": "http:\/\/localhost:9876\/base\/test\/services\/simple2.js",
+									"simpleDependency": "http:\/\/localhost:9876\/base\/test\/services\/simpleDependency.js",
+									"deep": "http:\/\/localhost:9876\/base\/test\/services\/deepDependency.js",
+									"relative": "http:\/\/localhost:9876\/base\/test\/services\/relativeDependency.js",
+									"deepRelative": "http:\/\/localhost:9876\/base\/test\/services\/deepRelative.js",
+									"simple1": "http:\/\/localhost:9876\/base\/test\/services\/simple2.js",
+									"tester": "hi"
+								},
+								"all": {
+									"static": {
+										"manifest": {
+											"tester": "hi"
+										},
+										"parent": null
+									},
+									"http:\/\/localhost:9876\/base\/test\/manifests\/chained-with-overrides.json": {
+										"manifest": {
+											"simple1": "http:\/\/localhost:9876\/base\/test\/services\/simple2.js"
+										},
+										"parent": "static"
+									},
+									"http:\/\/localhost:9876\/base\/test\/manifests\/simple.json": {
+										"manifest": {
+											"simple": "http:\/\/localhost:9876\/base\/test\/services\/simple1.js",
+											"simple2": "http:\/\/localhost:9876\/base\/test\/services\/simple2.js",
+											"simpleDependency": "http:\/\/localhost:9876\/base\/test\/services\/simpleDependency.js",
+											"deep": "http:\/\/localhost:9876\/base\/test\/services\/deepDependency.js",
+											"relative": "http:\/\/localhost:9876\/base\/test\/services\/relativeDependency.js",
+											"deepRelative": "http:\/\/localhost:9876\/base\/test\/services\/deepRelative.js"
+										},
+										"parent": "http:\/\/localhost:9876\/base\/test\/manifests\/chained-with-overrides.json"
+									}
+								}
+							});
+							run();
+						})
+						.catch(fail);
+				})
+				.catch(fail);
+		});
+
+		it('should return deeply nested manifests', function(run) {
+			system = new System.constructor();
+
+			system.config({
+				sofe: {
+					manifestUrl: root + '/test/manifests/chained-deep.json',
+					manifest: {
+						tester: 'hi'
+					}
+				}
+			});
+
+			Promise.all([system.import('simple1!/base/src/sofe.js'), system.import('simple2!/base/src/sofe.js'), system.import('/base/src/sofe.js')])
+				.then(function(values) {
+					values[2].getAllManifests()
+						.then(function(resp) {
+							expect(resp).toEqual({
+								"flat": {
+									"simple": "http:\/\/localhost:9876\/base\/test\/services\/simple1.js",
+									"simple2": "http:\/\/localhost:9876\/base\/test\/services\/simple2.js",
+									"simpleDependency": "http:\/\/localhost:9876\/base\/test\/services\/simpleDependency.js",
+									"deep": "http:\/\/localhost:9876\/base\/test\/services\/deepDependency.js",
+									"relative": "http:\/\/localhost:9876\/base\/test\/services\/relativeDependency.js",
+									"deepRelative": "http:\/\/localhost:9876\/base\/test\/services\/deepRelative.js",
+									"simple1": "http:\/\/localhost:9876\/base\/test\/services\/simple2.js",
+									"tester": "hi"
+								},
+								"all": {
+									"static": {
+										"manifest": {
+											"tester": "hi"
+										},
+										"parent": null
+									},
+									"http:\/\/localhost:9876\/base\/test\/manifests\/chained-deep.json": {
+										"manifest": {
+
+										},
+										"parent": "static"
+									},
+									"http:\/\/localhost:9876\/base\/test\/manifests\/chained-with-overrides.json": {
+										"manifest": {
+											"simple1": "http:\/\/localhost:9876\/base\/test\/services\/simple2.js"
+										},
+										"parent": "http:\/\/localhost:9876\/base\/test\/manifests\/chained-deep.json"
+									},
+									"http:\/\/localhost:9876\/base\/test\/manifests\/simple.json": {
+										"manifest": {
+											"simple": "http:\/\/localhost:9876\/base\/test\/services\/simple1.js",
+											"simple2": "http:\/\/localhost:9876\/base\/test\/services\/simple2.js",
+											"simpleDependency": "http:\/\/localhost:9876\/base\/test\/services\/simpleDependency.js",
+											"deep": "http:\/\/localhost:9876\/base\/test\/services\/deepDependency.js",
+											"relative": "http:\/\/localhost:9876\/base\/test\/services\/relativeDependency.js",
+											"deepRelative": "http:\/\/localhost:9876\/base\/test\/services\/deepRelative.js"
+										},
+										"parent": "http:\/\/localhost:9876\/base\/test\/manifests\/chained-with-overrides.json"
+									}
+								}
+							});
+
+							run();
+						})
+						.catch(fail);
+				})
+				.catch(fail);
+		});
+
+		it('should non nested manifests', function(run) {
+			system = new System.constructor();
+
+			system.config({
+				sofe: {
+					manifestUrl: root + '/test/manifests/simple.json',
+					manifest: {
+						tester: 'hi'
+					}
+				}
+			});
+
+			Promise.all([system.import('simple!/base/src/sofe.js'), system.import('simple2!/base/src/sofe.js'), system.import('/base/src/sofe.js')])
+				.then(function(values) {
+					values[2].getAllManifests()
+						.then(function(resp) {
+							expect(resp).toEqual({
+								"flat": {
+									"simple": "http:\/\/localhost:9876\/base\/test\/services\/simple1.js",
+									"simple2": "http:\/\/localhost:9876\/base\/test\/services\/simple2.js",
+									"simpleDependency": "http:\/\/localhost:9876\/base\/test\/services\/simpleDependency.js",
+									"deep": "http:\/\/localhost:9876\/base\/test\/services\/deepDependency.js",
+									"relative": "http:\/\/localhost:9876\/base\/test\/services\/relativeDependency.js",
+									"deepRelative": "http:\/\/localhost:9876\/base\/test\/services\/deepRelative.js",
+									"tester": "hi"
+								},
+								"all": {
+									"static": {
+										"manifest": {
+											"tester": "hi"
+										},
+										"parent": null
+									},
+									"http:\/\/localhost:9876\/base\/test\/manifests\/simple.json": {
+										"manifest": {
+											"simple": "http:\/\/localhost:9876\/base\/test\/services\/simple1.js",
+											"simple2": "http:\/\/localhost:9876\/base\/test\/services\/simple2.js",
+											"simpleDependency": "http:\/\/localhost:9876\/base\/test\/services\/simpleDependency.js",
+											"deep": "http:\/\/localhost:9876\/base\/test\/services\/deepDependency.js",
+											"relative": "http:\/\/localhost:9876\/base\/test\/services\/relativeDependency.js",
+											"deepRelative": "http:\/\/localhost:9876\/base\/test\/services\/deepRelative.js"
+										},
+										"parent": "static"
+									}
+								}
+							});
+
+							run();
+						})
+						.catch(fail);
+				})
+				.catch(fail);
+		});
+
 	});
 });
