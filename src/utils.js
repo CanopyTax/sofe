@@ -6,7 +6,15 @@ import { join } from 'path-browserify';
  * @param {String} address A URL
  * @return {String} The path within the given URL
  */
-export function getServiceName(address) {
+export function getServiceName(obj) {
+	let address;
+	if (typeof obj === 'string') {
+		address = obj;
+	} else if (typeof obj === 'object' && typeof obj.address === 'string') {
+		address = obj.address;
+	} else {
+		throw new Error(`getServiceName must be called with a string url or with a SystemJS load object that has an address`);
+	}
 	const splits = address.split('/');
 
 	return splits[splits.length - 1];
