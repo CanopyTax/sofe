@@ -74,7 +74,7 @@ describe('sofe api', () => {
 			system
 			.import('/base/src/sofe.js')
 			.then(function(sofe) {
-				sofe.getServiceName("https://localhost:8080/service-name").toEqual("service-name");
+				expect(sofe.getServiceName("https://localhost:8080/service-name")).toEqual("service-name");
 				done();
 			})
 			.catch(fail);
