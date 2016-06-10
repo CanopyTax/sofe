@@ -465,5 +465,43 @@ describe('middleware', function() {
 				})
 				.catch(fail);
 		});
+
+		it('should execute multiple middleware defined with multiple setMiddleWare calls', function(run) {
+			let middleware1 = jasmine.createSpy();
+			let middleware2 = jasmine.createSpy();
+
+			system.config({
+				sofe: {
+					manifest: {
+						simple: root + '/test/services/simple1.js',
+					}
+				}
+			});
+
+			system.import('/base/src/sofe.js')
+				.then(function(sofe) {
+					sofe.applyMiddleware(() => (preLocateLoad, preLocate) => {
+						middleware1();
+						preLocate(preLocateLoad);
+					})
+
+					sofe.applyMiddleware(() => (preLocateLoad, preLocate) => {
+						middleware2();
+						preLocate(preLocateLoad);
+					})
+
+					Promise.all([
+						system.import('simple!/base/src/sofe.js'),
+					]).then((all) => {
+						expect(all[0]()).toBe('mumtaz');
+						expect(middleware1).toHaveBeenCalled();
+						expect(middleware2).toHaveBeenCalled();
+						run();
+					})
+					.catch(fail);
+
+				})
+				.catch(fail);
+		});
 	});
 });

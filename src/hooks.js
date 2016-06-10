@@ -127,7 +127,7 @@ export function locate(load) {
 }
 
 export function setMiddleWare(middleware) {
-	allMiddleware = middleware;
+	allMiddleware = [ ...allMiddleware, ...middleware];
 }
 
 export function fetch(load, systemFetch) {
