@@ -124,7 +124,7 @@ describe('static resolution', function() {
 
 		system.import('DoesNotExist!/base/src/sofe.js')
 			.catch(function(error) {
-				expect(error.message.split('\n')[0]).toBe('Invalid registry response for service: DoesNotExist');
+				expect(error.message.split('\n')[0]).toBe('(SystemJS) Invalid registry response for service: DoesNotExist');
 				run();
 			});
 	});

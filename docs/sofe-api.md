@@ -152,6 +152,36 @@ if (isOverride('lodash')) {
 }
 ```
 
+#### getManifest(url): Promise
+Returns a promise that will resolve with a flat object of key value pairs, where the keys are service names and the values are urls. If the manifest at the specified url has a chained `manifestUrl`, then
+the entire chain of manifests will be traversed, with the resulting manifest remaining a flat map of services. If two manifests have the same service, normal precedence rules will apply to determine
+which manifest will take precedence (whichever is retrieved first takes precedence).
+
+```javascript
+import { getManifest } from 'sofe';
+
+getManifest("https://example.com/sofe-manifest.json")
+.then(function(manifest) {
+	console.log(manifest);
+})
+.catch(function(ex) {
+	throw ex;
+})
+```
+
+#### getServiceName(string|object): String
+Will parse out the sofe service name when given a url string or a SystemJS `load` object (which has an `address` property whose value is a string url).
+
+```javascript
+import { getServiceName } from 'sofe';
+
+getServiceName("https://example.com/the-name-of-my-service")
+// the-name-of-my-service
+
+getServiceName({address: "https://example.com/service-2"})
+// service-2
+```
+
 #### Middleware
 Sofe middleware takes inspiration from the [redux middleware
 api](http://redux.js.org/docs/advanced/Middleware.html). We highly

@@ -72,7 +72,7 @@ describe('remote resolution', function() {
 	it('should throw an error for an undefined service', function(run) {
 		system.import('DoesNotExist!/base/src/sofe.js')
 			.catch(function(error) {
-				expect(error.message.split('\n')[0]).toBe('Invalid registry response for service: DoesNotExist');
+				expect(error.message.split('\n')[0]).toBe('(SystemJS) Invalid registry response for service: DoesNotExist');
 				run();
 			});
 	});
@@ -91,7 +91,7 @@ describe('remote resolution', function() {
 				run();
 			})
 			.catch(function(err) {
-				expect(err.message.split('\n')[0]).toBe('Invalid manifest: must be parseable JSON');
+				expect(err.message.split('\n')[0]).toBe('(SystemJS) Invalid manifest: must be parseable JSON');
 				run();
 			});
 	});
@@ -110,7 +110,7 @@ describe('remote resolution', function() {
 				run();
 			})
 			.catch(function(err) {
-				expect(err.message.split('\n')[0]).toBe("Invalid manifest JSON at '" + system.sofe.manifestUrl + "': a manifest must include a sofe attribute");
+				expect(err.message.split('\n')[0]).toBe("(SystemJS) Invalid manifest JSON at '" + system.sofe.manifestUrl + "': a manifest must include a sofe attribute");
 				run();
 			});
 	});
@@ -130,7 +130,7 @@ describe('remote resolution', function() {
 				run();
 			})
 			.catch(function (err) {
-				expect(err.message.split('\n')[0]).toBe("Invalid manifest JSON at '" + system.sofe.manifestUrl + "': there must either be a 'sofe.manifest' object or 'sofe.manifestUrl' string");
+				expect(err.message.split('\n')[0]).toBe("(SystemJS) Invalid manifest JSON at '" + system.sofe.manifestUrl + "': there must either be a 'sofe.manifest' object or 'sofe.manifestUrl' string");
 				run();
 			});
 	});
@@ -150,7 +150,7 @@ describe('remote resolution', function() {
 				run();
 			})
 			.catch(function (err) {
-				expect(err.message.split('\n')[0]).toBe("Invalid manifest JSON at '" + system.sofe.manifestUrl + "': the 'manifest' property must be a plain object");
+				expect(err.message.split('\n')[0]).toBe("(SystemJS) Invalid manifest JSON at '" + system.sofe.manifestUrl + "': the 'manifest' property must be a plain object");
 				run();
 			});
 	});
@@ -227,7 +227,7 @@ describe('remote resolution', function() {
 				run();
 			})
 			.catch(function(err) {
-				expect(err.message.split('\n')[0]).toBe('Invalid manifest: must be parseable JSON');
+				expect(err.message.split('\n')[0]).toBe('(SystemJS) Invalid manifest: must be parseable JSON');
 				run();
 			});
 	});
@@ -296,7 +296,7 @@ describe('remote resolution', function() {
 					run();
 				})
 				.catch(function(err) {
-					expect(err.message.split('\n')[0]).toBe("Cannot load manifest -- circular chain of sofe manifests, 'http://localhost:9876/base/test/manifests/chained-circular.json' detected twice in chain.");
+					expect(err.message.split('\n')[0]).toBe("(SystemJS) Cannot load manifest -- circular chain of sofe manifests, 'http://localhost:9876/base/test/manifests/chained-circular.json' detected twice in chain.");
 					run();
 				});
 		});
@@ -316,7 +316,7 @@ describe('remote resolution', function() {
 					run();
 				})
 				.catch(function(err) {
-					expect(err.message.split('\n')[0]).toBe('Invalid manifest: must be parseable JSON');
+					expect(err.message.split('\n')[0]).toBe('(SystemJS) Invalid manifest: must be parseable JSON');
 					run();
 				});
 		});
