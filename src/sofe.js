@@ -21,5 +21,15 @@ export function getManifest(url) {
 		throw new Error(`sofe getManifest API must be called with a url string`);
 	}
 
-	return _getManifest({manifestUrl: url});
+	return new Promise((resolve, reject) => {
+		_getManifest({manifestUrl: url})
+		.then(() => {
+			getAllManifests()
+			.then(manifests => {
+				resolve(manifests.all[url].manifest)
+			})
+			.catch(reject);
+		})
+		.catch(reject);
+	});
 }
