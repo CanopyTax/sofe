@@ -21,5 +21,20 @@ export function getManifest(url) {
 		throw new Error(`sofe getManifest API must be called with a url string`);
 	}
 
-	return _getManifest({manifestUrl: url});
+	return new Promise((resolve, reject) => {
+		// Ensure that the manifest for this url has been retrieved
+		_getManifest({manifestUrl: url})
+		.then(() => {
+			/* We don't want the merged combination of all of the chained manifests,
+			 * which is what _getManifest returns. Instead, we want *just* the manifest
+			 * exactly as it is found at the specified url.
+			 */
+			getAllManifests()
+			.then(manifests => {
+				resolve(manifests.all[url].manifest)
+			})
+			.catch(reject);
+		})
+		.catch(reject);
+	});
 }

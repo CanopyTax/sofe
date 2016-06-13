@@ -154,8 +154,7 @@ if (isOverride('lodash')) {
 
 #### getManifest(url): Promise
 Returns a promise that will resolve with a flat object of key value pairs, where the keys are service names and the values are urls. If the manifest at the specified url has a chained `manifestUrl`, then
-the entire chain of manifests will be traversed, with the resulting manifest remaining a flat map of services. If two manifests have the same service, normal precedence rules will apply to determine
-which manifest will take precedence (whichever is retrieved first takes precedence).
+the chained manifests will be *not* be merged in or returned in any way.
 
 ```javascript
 import { getManifest } from 'sofe';
