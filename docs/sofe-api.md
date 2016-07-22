@@ -79,6 +79,16 @@ If there are multiple urls that a service could be resolved to, sofe will resolv
 5. The `url` property inside of the `sofe` attribute of the NPM package's package.json file
 6. The `main` file inside of the NPM package's package.json file, at the `latest` version. The files themselves are retrieved from npmcdn.com.
 
+## Relative paths
+Dependencies can be loaded relative to the location of a service:
+```js
+import dep from 'service/dir/dep.js!sofe';
+
+// If the location of service is http://localhost/service.js
+// then the resolved dependency will be http://localhost/dir/dep.js
+```
+Note: You cannot put `../` into a relative service path.
+
 ## When to use `System.import` instead of just `import`
 Because services are loaded at run-time, they cannot be bundled inside the application. Avoid bundling by using `System.import` syntax instead of `import`. The problem is `System.import` can be cumbersome to use for all imports. If you bundle a JSPM project with sofe `import` statements, you are likely to get errors that say: `Uncaught (in promise) Error: This sofe service was bundled and needs to be removed from System.register`. Removing the service from System.register will allow it to be loaded at run-time, even if the project is bundled.
 
