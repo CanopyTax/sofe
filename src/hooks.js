@@ -1,4 +1,4 @@
-import { getServiceName, resolvePathFromService } from './utils.js';
+import { getServiceName, resolvePathFromService, getUrlFromService } from './utils.js';
 import { getUrlFromRegistry } from './registries.js';
 import { getManifest, clearManifest } from './manifest.js';
 import { stepMiddleware } from './middleware.js';
@@ -71,6 +71,9 @@ export function locate(load) {
 	return new Promise((resolvePromise, reject) => {
 		stepMiddleware(allMiddleware, load, function(load, newMiddleware) {
 			function resolve(url) {
+				// Resolve relative paths
+				url = getUrlFromService(load.address, url);
+
 				stepMiddleware(newMiddleware, url, function(newUrl, newMiddleware) {
 					middlewareMap[id] = newMiddleware;
 					middlewareTracker = id;

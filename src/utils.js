@@ -15,9 +15,12 @@ export function getServiceName(obj) {
 	} else {
 		throw new Error(`getServiceName must be called with a string url or with a SystemJS load object that has an address`);
 	}
-	const splits = address.split('/');
 
-	return splits[splits.length - 1];
+	let urlParts = getRegex().exec(address);
+
+	const splits = urlParts[5].split('/');
+
+	return splits[0] || splits[1];
 }
 
 /**
@@ -35,11 +38,33 @@ export function resolvePathFromService(services, name, parentName) {
 
 	let parentAddress = getServiceResolution(services, parentName);
 
-	let urlParts = (/^(([^:\/?#]+):)?(\/\/([^\/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?/g).exec(parentAddress);
+	let urlParts = getRegex().exec(parentAddress);
 
 	return urlParts[1] + urlParts[3] + join(
 		urlParts[5], '../', name
 	);
+}
+
+/**
+ * Given a resolved service url, generate a corresponding absolute path from the original service name.
+ * This is needed to resolve relative paths within the service name.
+ *
+ * @param {String} service The full service name requested to sofe, may include a relative path
+ * @param {String} url The resolved url of the service
+ *
+ * @return {String} A new url with. Possibly the same as the input url.
+ */
+export function getUrlFromService(service, url) {
+	let parts = getRegex().exec(service)[5].split('/');
+	parts = !parts[0] ? parts.slice(1) : parts;
+
+	const path = parts.slice(1).join('/');
+
+	if (path) {
+		return `${url.substring(0, url.lastIndexOf('/'))}/${path}`;
+	} else {
+		return url;
+	}
 }
 
 function getServiceResolution(services, name) {
@@ -48,4 +73,8 @@ function getServiceResolution(services, name) {
 			return services[service];
 		}
 	}
+}
+
+function getRegex() {
+	return /^(([^:\/?#]+):)?(\/\/([^\/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?/g;
 }
