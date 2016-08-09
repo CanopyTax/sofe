@@ -1,4 +1,5 @@
 import { join } from 'path-browserify';
+const hasWindow = typeof window !== 'undefined';
 
 /**
  * Given a full URL address, parse the pathname
@@ -59,6 +60,9 @@ export function resolvePathFromService(services, name, parentName) {
  * @return {String} A new url with. Possibly the same as the input url.
  */
 export function getUrlFromService(service, url) {
+	// The url should be pointing to a "blank.js" file if we are running in node (bundle mode)
+	if (!hasWindow) return url;
+
 	let parts = getRegex().exec(service)[5].split('/');
 
 	// if there is a leading `/` then `parts[0]` will be empty

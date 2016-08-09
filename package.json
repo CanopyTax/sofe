@@ -2,7 +2,7 @@
   "name": "sofe",
   "version": "1.5.0",
   "description": "Service Oriented Front-end",
-  "main": "dist/sofe.js",
+  "main": "dist/sofe.min.js",
   "scripts": {
     "test": "karma start",
     "build": "npm run clean && babel src --out-dir lib && node build.js && cp lib/blank.js dist/blank.js && uglifyjs dist/sofe.js --source-map dist/sofe.min.js.map -o dist/sofe.min.js -m",
