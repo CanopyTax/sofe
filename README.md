@@ -32,7 +32,7 @@ More on the [motivation for SOA in the browser](docs/motivation.md)
   ```
 
 ### Create your own service
-By default, all npm packages are loaded through [unpkg](https://unpkg.com). While this is convenient, it isn't always
+By default, all npm packages are loaded through npm ([unpkg](https://unpkg.com)). While this is convenient, it isn't always
 what you want to do for your own services. You can provide a custom location for where your service distributable is located
 by adding a `sofe` property to your package.json:
 ```javascript
