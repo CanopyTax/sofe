@@ -14,7 +14,7 @@ More on the [motivation for SOA in the browser](docs/motivation.md)
 2. Configure SystemJS to use the sofe plugin:
 
   ```bash
-  jspm install sofe=npm:sofe
+  jspm install npm:sofe
   ```
 3. Load sofe services:
 
