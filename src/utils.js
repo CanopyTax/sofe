@@ -25,7 +25,11 @@ export function getServiceName(obj) {
 
 	// There might be a leading `/`, if so `splits[0]` is empty and
 	// we want to get the second element of the array.
-	return splits[0] || splits[1];
+	return removeBang(splits[0] || splits[1]);
+}
+
+function removeBang(url) {
+	return url.indexOf('!') > -1 ? url.substring(0, url.indexOf('!')) : url;
 }
 
 /**
