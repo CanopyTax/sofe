@@ -39,7 +39,7 @@ export function getManifest(url) {
 	});
 }
 
-if (localStorage && !localStorage.getItem('disable-sofe-override-warning')) {
+if (typeof localStorage !== 'undefined' && !localStorage.getItem('disable-sofe-override-warning')) {
 	let numOverrides = 0;
 	for (let i=0; i<localStorage.length; i++) {
 		const key = localStorage.key(i);
@@ -55,7 +55,7 @@ if (localStorage && !localStorage.getItem('disable-sofe-override-warning')) {
 	}
 }
 
-if (sessionStorage && !sessionStorage.getItem('disable-sofe-override-warning')) {
+if (typeof sessionStorage !== 'undefined' && !sessionStorage.getItem('disable-sofe-override-warning')) {
 	let numOverrides = 0;
 	for (let i=0; i<sessionStorage.length; i++) {
 		const key = sessionStorage.key(i);
