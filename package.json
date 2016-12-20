@@ -5,9 +5,9 @@
   "main": "dist/sofe.js",
   "scripts": {
     "test": "karma start",
-    "build": "npm run clean && babel src --out-dir lib && node build.js && cp lib/blank.js dist/blank.js && uglifyjs dist/sofe.js --source-map dist/sofe.min.js.map -o dist/sofe.min.js",
+    "build": "npm run clean && babel src --out-dir lib && node build.js && cp lib/blank.js dist/blank.js && uglifyjs dist/sofe.js --source-map dist/sofe.min.js.map -o dist/sofe.min.js && echo 'Uglified sofe into dist/sofe.min.js'",
     "rollup": "rollup src/index.js -f cjs -o dist/sofe.js",
-    "clean": "rm -rf lib",
+    "clean": "rm -rf lib dist",
     "prepublish": "npm run build",
     "examples": "cd examples/static && npm install && jspm install && cd ../remote && npm install && jspm install && cd ../../ && static -p5554 examples/"
   },
@@ -47,9 +47,9 @@
     "karma-phantomjs-launcher": "^0.2.1",
     "node-static": "^0.7.7",
     "phantomjs": "^1.9.19",
-    "rollup": "0.21.2",
-    "rollup-plugin-commonjs": "1.4.0",
-    "rollup-plugin-npm": "1.1.0",
+    "rollup": "0.37.0",
+    "rollup-plugin-commonjs": "6.0.0",
+    "rollup-plugin-node-resolve": "2.0.0",
     "systemjs": "^0.19.29",
     "uglify-js": "^2.6.2"
   },

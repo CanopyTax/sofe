@@ -38,3 +38,35 @@ export function getManifest(url) {
 		.catch(reject);
 	});
 }
+
+if (localStorage && !localStorage.getItem('disable-sofe-override-warning')) {
+	let numOverrides = 0;
+	for (let i=0; i<localStorage.length; i++) {
+		const key = localStorage.key(i);
+		const serviceName = key.slice('sofe:'.length);
+
+		if (key.match(/sofe:(\S)+/g)) {
+			console.info(`There is a local storage sofe override for the service '${serviceName}' to url '${localStorage.getItem(key)}'`);
+			numOverrides++;
+		}
+	}
+	if (numOverrides > 0) {
+		console.info(`Run localStorage.setItem('disable-sofe-override-warning', true) to turn off sofe override warnings`);
+	}
+}
+
+if (sessionStorage && !sessionStorage.getItem('disable-sofe-override-warning')) {
+	let numOverrides = 0;
+	for (let i=0; i<sessionStorage.length; i++) {
+		const key = sessionStorage.key(i);
+		const serviceName = key.slice('sofe:'.length);
+
+		if (key.match(/sofe:(\S)+/g)) {
+			console.info(`There is a session storage sofe override for the service '${serviceName}' to url '${sessionStorage.getItem(key)}'`);
+			numOverrides++;
+		}
+	}
+	if (numOverrides > 0) {
+		console.info(`Run sessionStorage.setItem('disable-sofe-override-warning', true) to turn off sofe override warnings`);
+	}
+}
