@@ -2,12 +2,12 @@
 Most of the API is for telling sofe how to resolve a service name to an actual file location. Because we don't want to favor any specific back-end technology, sofe tries to favor configuration over convention. As a result, there are a variety of approaches to setting up your project.
 
 ### Approach #1
-**npmcdn to find urls and host files**
+**unpkg to find urls and host files**
 
-*Any* npm package can be coerced into being a sofe service, since npmcdn.com hosts all files for all npm packages. This is automatically done by sofe whenever the package.json for an npm package does not have a valid `sofe` property.
+*Any* npm package can be coerced into being a sofe service, since unpkg.com hosts all files for all npm packages. This is automatically done by sofe whenever the package.json for an npm package does not have a valid `sofe` property.
 
 ### Approach #2
-**npmcdn to find urls, your own CDN for files**
+**unpkg to find urls, your own CDN for files**
 
 Simply put a distributable file on a CDN, modify the package.json, and publish the service to npm -- then any application can automatically resolve and load the service.
 
@@ -18,7 +18,7 @@ For example, a `sofe-hello-world` service could automatically be resolved if `so
   "name": "sofe-hello-world",
   "version": "1.0.0",
   "sofe": {
-    "url": "https://npmcdn.com/sofe-hello-world@1.0.0/hello.js"
+    "url": "https://unpkg.com/sofe-hello-world@1.0.0/hello.js"
   }
 }
 ```
@@ -31,7 +31,7 @@ Instead of automatically resolving services, provide a manifest of services with
 System.config({
   sofe: {
     manifest: {
-      "sofe-hello-world": "https://npmcdn.com/sofe-hello-world@1.0.0/hello.js"
+      "sofe-hello-world": "https://unpkg.com/sofe-hello-world@1.0.0/hello.js"
     }
   }
 });
@@ -51,7 +51,7 @@ System.config({
 {
   "sofe": {
     "manifest": {
-      "sofe-hello-world": "https://npmcdn.com/sofe-hello-world@1.0.0/hello.js"
+      "sofe-hello-world": "https://unpkg.com/sofe-hello-world@1.0.0/hello.js"
     }
   }
 }
@@ -64,9 +64,9 @@ In addition to automatic resolution or manifest resolution, the urls to individu
 
 Example:
 ```js
-window.localStorage.setItem('sofe-hello-world', 'https://npmcdn.com/sofe-hello-world@1.0.0/hello.js');
+window.localStorage.setItem('sofe-hello-world', 'https://unpkg.com/sofe-hello-world@1.0.0/hello.js');
 // OR
-window.sessionStorage.setItem('sofe-hello-world', 'https://npmcdn.com/sofe-hello-world@1.0.0/hello.js');
+window.sessionStorage.setItem('sofe-hello-world', 'https://unpkg.com/sofe-hello-world@1.0.0/hello.js');
 ```
 
 ## Resolution precedence
@@ -77,7 +77,17 @@ If there are multiple urls that a service could be resolved to, sofe will resolv
 3. The `manifest` property inside of the `sofe` attribute of the `System.config` or manifest file
 4. The `manifestUrl` property inside of `sofe` attribute of the `System.config` or manifest file
 5. The `url` property inside of the `sofe` attribute of the NPM package's package.json file
-6. The `main` file inside of the NPM package's package.json file, at the `latest` version. The files themselves are retrieved from npmcdn.com.
+6. The `main` file inside of the NPM package's package.json file, at the `latest` version. The files themselves are retrieved from unpkg.com.
+
+## Relative paths
+Dependencies can be loaded relative to the location of a service:
+```js
+import dep from 'service/dir/dep.js!sofe';
+
+// If the location of service is http://localhost/service.js
+// then the resolved dependency will be http://localhost/dir/dep.js
+```
+Note: You cannot put `../` into a relative service path.
 
 ## When to use `System.import` instead of just `import`
 Because services are loaded at run-time, they cannot be bundled inside the application. Avoid bundling by using `System.import` syntax instead of `import`. The problem is `System.import` can be cumbersome to use for all imports. If you bundle a JSPM project with sofe `import` statements, you are likely to get errors that say: `Uncaught (in promise) Error: This sofe service was bundled and needs to be removed from System.register`. Removing the service from System.register will allow it to be loaded at run-time, even if the project is bundled.
@@ -105,7 +115,7 @@ System.config({
     sofe: {
        manifest: Object,    // Map of services with their distributable urls   
        manifestUrl: String, // Url for a manifest of available services
-       registry: String     // Provide a custom registry defaults to "https://npmcdn.com"
+       registry: String     // Provide a custom registry defaults to "https://unpkg.com"
     }
 });
 ```

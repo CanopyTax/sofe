@@ -1,4 +1,5 @@
 import { join } from 'path-browserify';
+const hasWindow = typeof window !== 'undefined';
 
 /**
  * Given a full URL address, parse the pathname
@@ -15,9 +16,20 @@ export function getServiceName(obj) {
 	} else {
 		throw new Error(`getServiceName must be called with a string url or with a SystemJS load object that has an address`);
 	}
-	const splits = address.split('/');
 
-	return splits[splits.length - 1];
+	// The service name might have a path in it!
+	// For example, you might `import a from 'service/a/path.js!sofe';`
+	// In that case, we want `getServiceName` to return just `'sesrvice'`;
+	let urlParts = getRegex().exec(address);
+	const splits = urlParts[5].split('/');
+
+	// There might be a leading `/`, if so `splits[0]` is empty and
+	// we want to get the second element of the array.
+	return removeBang(splits[0] || splits[1]);
+}
+
+function removeBang(url) {
+	return url.indexOf('!') > -1 ? url.substring(0, url.indexOf('!')) : url;
 }
 
 /**
@@ -35,11 +47,42 @@ export function resolvePathFromService(services, name, parentName) {
 
 	let parentAddress = getServiceResolution(services, parentName);
 
-	let urlParts = (/^(([^:\/?#]+):)?(\/\/([^\/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?/g).exec(parentAddress);
+	let urlParts = getRegex().exec(parentAddress);
 
 	return urlParts[1] + urlParts[3] + join(
 		urlParts[5], '../', name
 	);
+}
+
+/**
+ * Given a resolved service url, generate a corresponding absolute path from the original service name.
+ * This is needed to resolve relative paths within the service name.
+ *
+ * @param {String} service The full service name requested to sofe, may include a relative path
+ * @param {String} url The resolved url of the service
+ *
+ * @return {String} A new url with. Possibly the same as the input url.
+ */
+export function getUrlFromService(service, url) {
+	// The url should be pointing to a "blank.js" file if we are running in node (bundle mode)
+	if (!hasWindow) return url;
+
+	let parts = getRegex().exec(service)[5].split('/');
+
+	// if there is a leading `/` then `parts[0]` will be empty
+	// and we want to strip that out.
+	parts = !parts[0] ? parts.slice(1) : parts;
+
+	// Remove the first element in the path, which should be the service name
+	// For example, you might `import a from 'service/a/path.js!sofe';`
+	// In that case, we want to remove `service` from the path;
+	const path = parts.slice(1).join('/');
+
+	if (path) {
+		return `${url.substring(0, url.lastIndexOf('/'))}/${path}`;
+	} else {
+		return url;
+	}
 }
 
 function getServiceResolution(services, name) {
@@ -48,4 +91,8 @@ function getServiceResolution(services, name) {
 			return services[service];
 		}
 	}
+}
+
+function getRegex() {
+	return /^(([^:\/?#]+):)?(\/\/([^\/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?/g;
 }

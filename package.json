@@ -1,11 +1,15 @@
 {
   "name": "sofe",
-  "version": "1.4.1",
+  "version": "1.5.5",
   "description": "Service Oriented Front-end",
   "main": "dist/sofe.js",
   "scripts": {
     "test": "karma start",
+<<<<<<< HEAD
     "build": "npm run clean && babel src --out-dir lib && node build.js && cp lib/blank.js dist/blank.js && uglifyjs dist/sofe.js --source-map dist/sofe.min.js.map -o dist/sofe.min.js && echo 'Uglified sofe into dist/sofe.min.js'",
+=======
+    "build": "npm run clean && babel src --out-dir lib && node build.js && cp lib/blank.js dist/blank.js && uglifyjs dist/sofe.js --source-map dist/sofe.min.js.map -o dist/sofe.min.js -m && cp dist/sofe.min.js dist/sofe.js",
+>>>>>>> origin/master
     "rollup": "rollup src/index.js -f cjs -o dist/sofe.js",
     "clean": "rm -rf lib dist",
     "prepublish": "npm run build",
@@ -44,9 +48,9 @@
     "karma-chrome-launcher": "^0.2.2",
     "karma-coverage": "git+https://github.com/douglasduteil/karma-coverage.git#next",
     "karma-jasmine": "^0.3.6",
-    "karma-phantomjs-launcher": "^0.2.1",
+    "karma-phantomjs-launcher": "^1.0.2",
     "node-static": "^0.7.7",
-    "phantomjs": "^1.9.19",
+    "phantomjs": "^1.9.20",
     "rollup": "0.37.0",
     "rollup-plugin-commonjs": "6.0.0",
     "rollup-plugin-node-resolve": "2.0.0",

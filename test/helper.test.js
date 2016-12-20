@@ -1,8 +1,8 @@
-var root = 'http://localhost:' + window.location.port + '/base';
+let root = 'http://localhost:' + window.location.port + '/base';
 
 describe('helpers', function() {
 
-	var system;
+	let system;
 
 	beforeEach(function() {
 		system = new System.constructor();

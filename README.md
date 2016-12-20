@@ -1,5 +1,5 @@
 # sofe
-Service Oriented Front-end
+Service Oriented Front-end - Sofe is a [SystemJS](https://github.com/systemjs/systemjs) plugin that resolves a module name to a fully qualified url at runtime.
 
 [![npm version](https://img.shields.io/npm/v/sofe.svg?style=flat-square)](https://www.npmjs.org/package/sofe)
 [![Build Status](https://img.shields.io/travis/CanopyTax/sofe.svg?style=flat-square)](https://travis-ci.org/CanopyTax/sofe)
@@ -14,7 +14,7 @@ More on the [motivation for SOA in the browser](docs/motivation.md)
 2. Configure SystemJS to use the sofe plugin:
 
   ```bash
-  jspm install sofe=npm:sofe
+  jspm install npm:sofe
   ```
 3. Load sofe services:
 
@@ -32,7 +32,7 @@ More on the [motivation for SOA in the browser](docs/motivation.md)
   ```
 
 ### Create your own service
-By default, all npm packages are loaded through [npmcdn](https://npmcdn.com). While this is convenient, it isn't always
+By default, all npm packages are loaded through npm ([unpkg](https://unpkg.com)). While this is convenient, it isn't always
 what you want to do for your own services. You can provide a custom location for where your service distributable is located
 by adding a `sofe` property to your package.json:
 ```javascript

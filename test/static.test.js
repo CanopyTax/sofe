@@ -1,8 +1,8 @@
-var root = 'http://localhost:' + window.location.port + '/base';
+let root = 'http://localhost:' + window.location.port + '/base';
 
 describe('static resolution', function() {
 
-	var system;
+	let system;
 
 	beforeEach(function() {
 		system = new System.constructor();
@@ -83,6 +83,38 @@ describe('static resolution', function() {
 			});
 	});
 
+	it('should resolve relative services', function(run) {
+		system.config({
+			sofe: {
+				manifest: {
+					simple: root + '/test/services/simple1.js'
+				}
+			}
+		});
+
+		system.import('simple/simple2.js!/base/src/sofe.js')
+			.then(function(simple) {
+				expect(simple()).toBe('kwayis');
+				run();
+			});
+	});
+
+	it('should resolve relative services in sub-directories', function(run) {
+		system.config({
+			sofe: {
+				manifest: {
+					simple: root + '/simple1.js'
+				}
+			}
+		});
+
+		system.import('simple/test/services/simple2.js!/base/src/sofe.js')
+			.then(function(simple) {
+				expect(simple()).toBe('kwayis');
+				run();
+			});
+	});
+
 	it('should resolve relative dependencies inside services', function(run) {
 		system.config({
 			sofe: {
@@ -128,4 +160,5 @@ describe('static resolution', function() {
 				run();
 			});
 	});
+
 });

@@ -1,4 +1,4 @@
-const NPM_CDN = 'https://npmcdn.com';
+const NPM_CDN = 'https://unpkg.com';
 const hasWindow = typeof window !== 'undefined';
 
 function getRegistryUrl(config) {
