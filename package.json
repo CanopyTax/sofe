@@ -5,11 +5,7 @@
   "main": "dist/sofe.js",
   "scripts": {
     "test": "karma start",
-<<<<<<< HEAD
     "build": "npm run clean && babel src --out-dir lib && node build.js && cp lib/blank.js dist/blank.js && uglifyjs dist/sofe.js --source-map dist/sofe.min.js.map -o dist/sofe.min.js && echo 'Uglified sofe into dist/sofe.min.js'",
-=======
-    "build": "npm run clean && babel src --out-dir lib && node build.js && cp lib/blank.js dist/blank.js && uglifyjs dist/sofe.js --source-map dist/sofe.min.js.map -o dist/sofe.min.js -m && cp dist/sofe.min.js dist/sofe.js",
->>>>>>> origin/master
     "rollup": "rollup src/index.js -f cjs -o dist/sofe.js",
     "clean": "rm -rf lib dist",
     "prepublish": "npm run build",
