@@ -1,6 +1,8 @@
 var rollup = require('rollup').rollup;
-var npm = require('rollup-plugin-npm');
+var npm = require('rollup-plugin-node-resolve');
 var commonjs = require('rollup-plugin-commonjs');
+
+console.log("Creating rollup bundle")
 
 rollup({
 	entry: './lib/sofe.js',
@@ -23,4 +25,10 @@ rollup({
 	]
 }).then( function(bundle) {
 	bundle.write({ dest: 'dist/sofe.js', format: 'cjs' })
+	console.log("Wrote rollup bundle into dist")
+})
+.catch(function(err) {
+	setTimeout(function() {
+		throw err;
+	});
 });

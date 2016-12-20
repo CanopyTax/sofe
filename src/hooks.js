@@ -85,8 +85,6 @@ export function locate(load) {
 
 			//first check session storage (since it is very transient)
 			if (hasWindow && window.sessionStorage && window.sessionStorage.getItem(`sofe:${service}`)) {
-				console.log(`Using session storage override to resolve sofe service '${service}' to url '${window.sessionStorage.getItem(`sofe:${service}`)}'`);
-				console.log(`Run window.sessionStorage.removeItem('sofe:${service}') to remove this override`);
 				const url = window.sessionStorage.getItem(`sofe:${service}`);
 				serviceMap[load.name] = url;
 				addServiceOverride(service);
@@ -94,8 +92,6 @@ export function locate(load) {
 			}
 			//otherwise check local storage (since it is less transient)
 			else if (hasWindow && window.localStorage && window.localStorage.getItem(`sofe:${service}`)) {
-				console.log(`Using local storage override to resolve sofe service '${service}' to url '${window.localStorage.getItem(`sofe:${service}`)}'`);
-				console.log(`Run window.localStorage.removeItem('sofe:${service}') to remove this override`);
 				const url = window.localStorage.getItem(`sofe:${service}`);
 				serviceMap[load.name] = url;
 				addServiceOverride(service);
