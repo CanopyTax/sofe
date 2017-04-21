@@ -10,16 +10,17 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "jspm": "^0.16.19"
+    "jspm": "^0.17.0-beta.41",
+    "systemjs": "^0.20.12"
   },
   "jspm": {
+    "name": "static",
+    "main": "static.js",
     "dependencies": {
-      "sofe": "npm:sofe@^0.3.4"
+      "css": "github:systemjs/plugin-css@^0.1.33"
     },
     "devDependencies": {
-      "babel": "npm:babel-core@^5.8.24",
-      "babel-runtime": "npm:babel-runtime@^5.8.24",
-      "core-js": "npm:core-js@^1.1.4"
+      "plugin-babel": "npm:systemjs-plugin-babel@^0.0.21"
     }
   }
 }

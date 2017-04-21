@@ -50,7 +50,6 @@
     "rollup": "0.21.2",
     "rollup-plugin-commonjs": "1.4.0",
     "rollup-plugin-npm": "1.1.0",
-    "systemjs": "^0.19.29",
     "uglify-js": "^2.6.2"
   },
   "files": [
@@ -58,6 +57,6 @@
     "src"
   ],
   "dependencies": {
-    "path-browserify": "0.0.0"
+    "systemjs": "^0.20.12"
   }
 }
