@@ -31,7 +31,6 @@ export function locate(load) {
 
 	return new Promise((resolvePromise, reject) => {
 		stepMiddleware(allMiddleware, load, function(load, newMiddleware) {
-			let service = getServiceName(load.address);
 
 			function resolve(url) {
 				stepMiddleware(newMiddleware, url, function(newUrl, newMiddleware) {
@@ -40,6 +39,8 @@ export function locate(load) {
 					resolvePromise(newUrl);
 				});
 			}
+
+			let service = getServiceName(load.address);
 
 			//first check session storage (since it is very transient)
 			if (hasWindow && window.sessionStorage && window.sessionStorage.getItem(`sofe:${service}`)) {
