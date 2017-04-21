@@ -37,7 +37,7 @@ describe('registry resolution', function() {
 
 		system.import('malformed!/base/src/sofe.js')
 			.catch(function(err) {
-				expect(err.message.split('\n')[0]).toBe('(SystemJS) Invalid registry response for service: malformed')
+				expect(err.message.split('\n')[0].includes('Invalid registry response for service: malformed')).toBeTruthy()
 				run();
 			})
 	});

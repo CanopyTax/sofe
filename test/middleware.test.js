@@ -329,7 +329,7 @@ describe('middleware', function() {
 			system.import('/base/src/sofe.js')
 				.then(function(sofe) {
 					sofe.applyMiddleware(() => (preLocateLoad, preLocate) => {
-						expect(preLocateLoad.name).toBe('http://localhost:9876/santa');
+						expect(preLocateLoad.address).toBe('http://localhost:9876/santa');
 						preLocateLoad.name = preLocateLoad.name.replace('santa', 'simple');
 						preLocateLoad.address = preLocateLoad.address.replace('santa', 'simple');
 						preLocate(preLocateLoad);

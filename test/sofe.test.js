@@ -94,48 +94,6 @@ describe('sofe api', () => {
 			.catch(fail);
 		});
 
-		it('parses service name from a relative path with ports', function(done) {
-			system
-			.import('/base/src/sofe.js')
-			.then(function(sofe) {
-				let load = {
-					address: "https://localhost:8083/service-name/relative.js",
-					meta: {}
-				};
-				expect(sofe.getServiceName(load)).toEqual('service-name');
-				done();
-			})
-			.catch(fail);
-		});
-
-		it('parses service name from a relative path', function(done) {
-			system
-			.import('/base/src/sofe.js')
-			.then(function(sofe) {
-				let load = {
-					address: "https://localhost/service-name/relative.js",
-					meta: {}
-				};
-				expect(sofe.getServiceName(load)).toEqual('service-name');
-				done();
-			})
-			.catch(fail);
-		});
-
-		it('parses service name from a relative path with dot', function(done) {
-			system
-			.import('/base/src/sofe.js')
-			.then(function(sofe) {
-				let load = {
-					address: "https://localhost/service-name.css/relative.js",
-					meta: {}
-				};
-				expect(sofe.getServiceName(load)).toEqual('service-name.css');
-				done();
-			})
-			.catch(fail);
-		});
-
 		it('parses service name with query params', function(done) {
 			system
 			.import('/base/src/sofe.js')
@@ -159,60 +117,6 @@ describe('sofe api', () => {
 					meta: {}
 				};
 				expect(sofe.getServiceName(load)).toEqual('service-name');
-				done();
-			})
-			.catch(fail);
-		});
-	});
-
-	describe('Relative service', function() {
-		it('resolve a service with no path', function(done) {
-			system
-			.import('/base/src/utils.js')
-			.then(function(utils) {
-				expect(
-					utils.getUrlFromService('https://localhost/someService', 'http://hi.com/someService.js')
-				).toBe('http://hi.com/someService.js')
-
-				done();
-			})
-			.catch(fail);
-		});
-
-		it('resolve a service a path', function(done) {
-			system
-			.import('/base/src/utils.js')
-			.then(function(utils) {
-				expect(
-					utils.getUrlFromService('https://localhost/someService/tester.js', 'http://hi.com/someService.js')
-				).toBe('http://hi.com/tester.js')
-
-				done();
-			})
-			.catch(fail);
-		});
-
-		it('resolve a service a path with directories', function(done) {
-			system
-			.import('/base/src/utils.js')
-			.then(function(utils) {
-				expect(
-					utils.getUrlFromService('https://localhost/someService/dir1/dir2/tester.js', 'http://hi.com/someService.js')
-				).toBe('http://hi.com/dir1/dir2/tester.js')
-
-				done();
-			})
-			.catch(fail);
-		});
-
-		it('resolve a service a path with directories on both', function(done) {
-			system
-			.import('/base/src/utils.js')
-			.then(function(utils) {
-				expect(
-					utils.getUrlFromService('https://localhost/someService/dir1/dir2/tester.js', 'http://hi.com/dir3/someService.js')
-				).toBe('http://hi.com/dir3/dir1/dir2/tester.js')
-
 				done();
 			})
 			.catch(fail);

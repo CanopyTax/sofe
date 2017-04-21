@@ -28,6 +28,26 @@ describe('static resolution', function() {
 			})
 	});
 
+	it('should resolve a service without a bang', function(run) {
+		system.config({
+			sofe: {
+				manifest: {
+					"simple.service": root + '/test/services/simple1.js'
+				}
+			},
+			meta: {
+				"*.service": { loader: '/base/src/sofe.js' }
+			},
+		});
+
+		system.import('simple.service')
+			.then(function(auth) {
+				expect(auth()).toBe('mumtaz');
+				run();
+			})
+			.catch(fail);
+	});
+
 	it('should resolve multiple services at a time', function(run) {
 		system.config({
 			sofe: {
@@ -83,70 +103,6 @@ describe('static resolution', function() {
 			});
 	});
 
-	it('should resolve relative services', function(run) {
-		system.config({
-			sofe: {
-				manifest: {
-					simple: root + '/test/services/simple1.js'
-				}
-			}
-		});
-
-		system.import('simple/simple2.js!/base/src/sofe.js')
-			.then(function(simple) {
-				expect(simple()).toBe('kwayis');
-				run();
-			});
-	});
-
-	it('should resolve relative services in sub-directories', function(run) {
-		system.config({
-			sofe: {
-				manifest: {
-					simple: root + '/simple1.js'
-				}
-			}
-		});
-
-		system.import('simple/test/services/simple2.js!/base/src/sofe.js')
-			.then(function(simple) {
-				expect(simple()).toBe('kwayis');
-				run();
-			});
-	});
-
-	it('should resolve relative dependencies inside services', function(run) {
-		system.config({
-			sofe: {
-				manifest: {
-					relative: root + '/test/services/relativeDependency.js'
-				}
-			}
-		});
-
-		system.import('relative!/base/src/sofe.js')
-			.then(function(deep) {
-				expect(deep().data).toBe('mumtaz');
-				run();
-			});
-	});
-
-	it('should resolve deep relative dependencies inside services', function(run) {
-		system.config({
-			sofe: {
-				manifest: {
-					deepRelative: root + '/test/services/deepRelative.js'
-				}
-			}
-		});
-
-		system.import('deepRelative!/base/src/sofe.js')
-			.then(function(deep) {
-				expect(deep().data).toBe('mumtaz');
-				run();
-			});
-	});
-
 	it('should throw an error for an undefined service', function(run) {
 		system.config({
 			sofe: {
@@ -156,7 +112,7 @@ describe('static resolution', function() {
 
 		system.import('DoesNotExist!/base/src/sofe.js')
 			.catch(function(error) {
-				expect(error.message.split('\n')[0]).toBe('(SystemJS) Invalid registry response for service: DoesNotExist');
+				expect(error.message.split('\n')[0].includes('Invalid registry response for service: DoesNotExist')).toBeTruthy();
 				run();
 			});
 	});
