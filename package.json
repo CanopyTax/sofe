@@ -1,6 +1,6 @@
 {
   "name": "sofe",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Service Oriented Front-end",
   "main": "dist/sofe.js",
   "scripts": {
