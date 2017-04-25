@@ -122,4 +122,80 @@ describe('sofe api', () => {
 			.catch(fail);
 		});
 	});
+
+	fdescribe('getServiceUrl expternal API', function() {
+		afterEach(function() {
+			window.sofe.clearCache();
+		});
+
+		it('returns the url of a service', function(done) {
+			system.config({
+				sofe: {
+					manifest: {
+						simple: root + '/test/services/simple1.js'
+					}
+				}
+			});
+
+			system
+				.import("simple!/base/src/sofe.js")
+				.then(function(auth) {
+					system
+						.import("/base/src/sofe.js")
+						.then(sofe => {
+							expect(sofe.getServiceUrl("simple")).toBe(
+								root + "/test/services/simple1.js"
+							);
+							done();
+						})
+						.catch(fail);
+				})
+				.catch(fail);
+		});
+
+		it('returns the url of a service in local storage', function(done) {
+			system.config({
+				sofe: {
+					manifest: {
+						simple: root + '/test/services/simple1.js'
+					}
+				}
+			});
+
+			window.localStorage.setItem(
+				"sofe:simple",
+				"http://localhost:9876/base/test/services/simple2.js"
+			);
+
+			system
+				.import("simple!/base/src/sofe.js")
+				.then(function(auth) {
+					system
+						.import("/base/src/sofe.js")
+						.then(sofe => {
+							expect(sofe.getServiceUrl("simple")).toBe(
+								root + "/test/services/simple2.js"
+							);
+							window.localStorage.removeItem('sofe:simple');
+							done();
+						})
+						.catch(fail);
+				})
+				.catch(fail);
+		});
+
+		it("should throw an error if no service has been loaded", function(done) {
+			system
+				.import("/base/src/sofe.js")
+				.then(sofe => {
+					expect(sofe.getServiceUrl.bind(null, "simple")).toThrow(
+						new Error(
+							'Service "simple" has not been loaded, import the service before getting the service URL'
+						)
+					);
+					done();
+				})
+				.catch(fail);
+		});
+	});
 });
