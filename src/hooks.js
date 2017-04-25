@@ -14,9 +14,11 @@ let middlewareMap = {};
 let middlewareId = 0;
 let middlewareTracker = 0;
 
+export class InvalidServiceName extends Error {}
+
 export function getServiceUrl(name) {
 	if (!serviceMap[name]) {
-		throw new Error(
+		throw new InvalidServiceName(
 			`Service "${name}" has not been loaded, import the service before getting the service URL`
 		);
 	}

@@ -123,7 +123,7 @@ describe('sofe api', () => {
 		});
 	});
 
-	fdescribe('getServiceUrl expternal API', function() {
+	describe('getServiceUrl expternal API', function() {
 		afterEach(function() {
 			window.sofe.clearCache();
 		});
@@ -189,7 +189,7 @@ describe('sofe api', () => {
 				.import("/base/src/sofe.js")
 				.then(sofe => {
 					expect(sofe.getServiceUrl.bind(null, "simple")).toThrow(
-						new Error(
+						new sofe.InvalidServiceName(
 							'Service "simple" has not been loaded, import the service before getting the service URL'
 						)
 					);

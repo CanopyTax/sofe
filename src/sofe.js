@@ -1,5 +1,5 @@
 import { normalize, locate, fetch, getServiceUrl } from "./hooks.js";
-import { isOverride, setMiddleWare } from "./hooks.js";
+import { isOverride, setMiddleWare, InvalidServiceName } from "./hooks.js";
 import { getAllManifests as _getAllManifests } from "./manifest.js";
 import { getManifest as _getManifest } from "./manifest.js";
 
@@ -12,7 +12,7 @@ export function applyMiddleware(...middleware) {
 	setMiddleWare(chain);
 }
 
-export { locate, fetch, isOverride, getServiceUrl };
+export { locate, fetch, isOverride, getServiceUrl, InvalidServiceName };
 
 export { getServiceName } from "./utils.js";
 
