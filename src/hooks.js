@@ -14,7 +14,8 @@ let middlewareMap = {};
 let middlewareId = 0;
 let middlewareTracker = 0;
 
-export class InvalidServiceName extends Error {}
+export function InvalidServiceName() {}
+InvalidServiceName.prototype = Object.create(Error.prototype);
 
 export function getServiceUrl(name) {
 	if (!serviceMap[name]) {
