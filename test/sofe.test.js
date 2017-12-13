@@ -123,7 +123,7 @@ describe('sofe api', () => {
 		});
 	});
 
-	describe('getServiceUrl expternal API', function() {
+	describe('getServiceUrl external API', function() {
 		afterEach(function() {
 			window.sofe.clearCache();
 		});
