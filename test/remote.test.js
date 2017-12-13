@@ -53,26 +53,10 @@ describe('remote resolution', function() {
 			});
 	});
 
-	it('should resolve relative dependencies inside services', function(run) {
-		system.import('relative!/base/src/sofe.js')
-			.then(function(deep) {
-				expect(deep().data).toBe('mumtaz');
-				run();
-			});
-	});
-
-	it('should resolve deep relative dependencies inside services', function(run) {
-		system.import('deepRelative!/base/src/sofe.js')
-			.then(function(deep) {
-				expect(deep().data).toBe('mumtaz');
-				run();
-			});
-	});
-
 	it('should throw an error for an undefined service', function(run) {
 		system.import('DoesNotExist!/base/src/sofe.js')
 			.catch(function(error) {
-				expect(error.message.split('\n')[0]).toBe('(SystemJS) Invalid registry response for service: DoesNotExist');
+				expect(error.message.split('\n')[0].includes('Invalid registry response for service: DoesNotExist')).toBeTruthy();
 				run();
 			});
 	});
@@ -91,7 +75,7 @@ describe('remote resolution', function() {
 				run();
 			})
 			.catch(function(err) {
-				expect(err.message.split('\n')[0]).toBe('(SystemJS) Invalid manifest: must be parseable JSON');
+				expect(err.message.split('\n')[0].includes('Invalid manifest: must be parseable JSON')).toBeTruthy();
 				run();
 			});
 	});
@@ -110,7 +94,7 @@ describe('remote resolution', function() {
 				run();
 			})
 			.catch(function(err) {
-				expect(err.message.split('\n')[0]).toBe("(SystemJS) Invalid manifest JSON at '" + system.sofe.manifestUrl + "': a manifest must include a sofe attribute");
+				expect(err.message.split('\n')[0].includes("Invalid manifest JSON at '" + system.sofe.manifestUrl + "': a manifest must include a sofe attribute")).toBeTruthy();
 				run();
 			});
 	});
@@ -130,7 +114,7 @@ describe('remote resolution', function() {
 				run();
 			})
 			.catch(function (err) {
-				expect(err.message.split('\n')[0]).toBe("(SystemJS) Invalid manifest JSON at '" + system.sofe.manifestUrl + "': there must either be a 'sofe.manifest' object or 'sofe.manifestUrl' string");
+				expect(err.message.split('\n')[0].includes("Invalid manifest JSON at '" + system.sofe.manifestUrl + "': there must either be a 'sofe.manifest' object or 'sofe.manifestUrl' string")).toBeTruthy();
 				run();
 			});
 	});
@@ -150,7 +134,7 @@ describe('remote resolution', function() {
 				run();
 			})
 			.catch(function (err) {
-				expect(err.message.split('\n')[0]).toBe("(SystemJS) Invalid manifest JSON at '" + system.sofe.manifestUrl + "': the 'manifest' property must be a plain object");
+				expect(err.message.split('\n')[0].includes("Invalid manifest JSON at '" + system.sofe.manifestUrl + "': the 'manifest' property must be a plain object")).toBeTruthy();
 				run();
 			});
 	});
@@ -227,7 +211,7 @@ describe('remote resolution', function() {
 				run();
 			})
 			.catch(function(err) {
-				expect(err.message.split('\n')[0]).toBe('(SystemJS) Invalid manifest: must be parseable JSON');
+				expect(err.message.split('\n')[0].includes('Invalid manifest: must be parseable JSON')).toBeTruthy();
 				run();
 			});
 	});
@@ -246,13 +230,13 @@ describe('remote resolution', function() {
 				}
 			});
 
-			system.import('deepRelative!/base/src/sofe.js')
+			system.import('simple!/base/src/sofe.js')
 				.then(function(something) {
-					expect(something().data).toBe('mumtaz');
+					expect(something()).toBe('mumtaz');
 					run();
 				})
 				.catch(function(err) {
-					expect(false).toBe(err);
+					fail('Shouldn\'t error!');
 					run();
 				});
 		});
@@ -296,7 +280,7 @@ describe('remote resolution', function() {
 					run();
 				})
 				.catch(function(err) {
-					expect(err.message.split('\n')[0]).toBe("(SystemJS) Cannot load manifest -- circular chain of sofe manifests, 'http://localhost:9876/base/test/manifests/chained-circular.json' detected twice in chain.");
+					expect(err.message.split('\n')[0].includes("Cannot load manifest -- circular chain of sofe manifests, 'http://localhost:9876/base/test/manifests/chained-circular.json' detected twice in chain.")).toBeTruthy();
 					run();
 				});
 		});
@@ -316,7 +300,7 @@ describe('remote resolution', function() {
 					run();
 				})
 				.catch(function(err) {
-					expect(err.message.split('\n')[0]).toBe('(SystemJS) Invalid manifest: must be parseable JSON');
+					expect(err.message.split('\n')[0].includes('Invalid manifest: must be parseable JSON')).toBeTruthy();
 					run();
 				});
 		});
@@ -343,8 +327,6 @@ describe('remote resolution', function() {
 									"simple2": "http:\/\/localhost:9876\/base\/test\/services\/simple2.js",
 									"simpleDependency": "http:\/\/localhost:9876\/base\/test\/services\/simpleDependency.js",
 									"deep": "http:\/\/localhost:9876\/base\/test\/services\/deepDependency.js",
-									"relative": "http:\/\/localhost:9876\/base\/test\/services\/relativeDependency.js",
-									"deepRelative": "http:\/\/localhost:9876\/base\/test\/services\/deepRelative.js",
 									"simple1": "http:\/\/localhost:9876\/base\/test\/services\/simple2.js",
 									"tester": "hi"
 								},
@@ -367,8 +349,6 @@ describe('remote resolution', function() {
 											"simple2": "http:\/\/localhost:9876\/base\/test\/services\/simple2.js",
 											"simpleDependency": "http:\/\/localhost:9876\/base\/test\/services\/simpleDependency.js",
 											"deep": "http:\/\/localhost:9876\/base\/test\/services\/deepDependency.js",
-											"relative": "http:\/\/localhost:9876\/base\/test\/services\/relativeDependency.js",
-											"deepRelative": "http:\/\/localhost:9876\/base\/test\/services\/deepRelative.js"
 										},
 										"parent": "http:\/\/localhost:9876\/base\/test\/manifests\/chained-with-overrides.json"
 									}
@@ -403,8 +383,6 @@ describe('remote resolution', function() {
 									"simple2": "http:\/\/localhost:9876\/base\/test\/services\/simple2.js",
 									"simpleDependency": "http:\/\/localhost:9876\/base\/test\/services\/simpleDependency.js",
 									"deep": "http:\/\/localhost:9876\/base\/test\/services\/deepDependency.js",
-									"relative": "http:\/\/localhost:9876\/base\/test\/services\/relativeDependency.js",
-									"deepRelative": "http:\/\/localhost:9876\/base\/test\/services\/deepRelative.js",
 									"simple1": "http:\/\/localhost:9876\/base\/test\/services\/simple2.js",
 									"tester": "hi"
 								},
@@ -433,8 +411,6 @@ describe('remote resolution', function() {
 											"simple2": "http:\/\/localhost:9876\/base\/test\/services\/simple2.js",
 											"simpleDependency": "http:\/\/localhost:9876\/base\/test\/services\/simpleDependency.js",
 											"deep": "http:\/\/localhost:9876\/base\/test\/services\/deepDependency.js",
-											"relative": "http:\/\/localhost:9876\/base\/test\/services\/relativeDependency.js",
-											"deepRelative": "http:\/\/localhost:9876\/base\/test\/services\/deepRelative.js"
 										},
 										"parent": "http:\/\/localhost:9876\/base\/test\/manifests\/chained-with-overrides.json"
 									}
@@ -470,8 +446,6 @@ describe('remote resolution', function() {
 									"simple2": "http:\/\/localhost:9876\/base\/test\/services\/simple2.js",
 									"simpleDependency": "http:\/\/localhost:9876\/base\/test\/services\/simpleDependency.js",
 									"deep": "http:\/\/localhost:9876\/base\/test\/services\/deepDependency.js",
-									"relative": "http:\/\/localhost:9876\/base\/test\/services\/relativeDependency.js",
-									"deepRelative": "http:\/\/localhost:9876\/base\/test\/services\/deepRelative.js",
 									"tester": "hi"
 								},
 								"all": {
@@ -487,8 +461,6 @@ describe('remote resolution', function() {
 											"simple2": "http:\/\/localhost:9876\/base\/test\/services\/simple2.js",
 											"simpleDependency": "http:\/\/localhost:9876\/base\/test\/services\/simpleDependency.js",
 											"deep": "http:\/\/localhost:9876\/base\/test\/services\/deepDependency.js",
-											"relative": "http:\/\/localhost:9876\/base\/test\/services\/relativeDependency.js",
-											"deepRelative": "http:\/\/localhost:9876\/base\/test\/services\/deepRelative.js"
 										},
 										"parent": "static"
 									}

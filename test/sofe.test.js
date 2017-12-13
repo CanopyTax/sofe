@@ -94,48 +94,6 @@ describe('sofe api', () => {
 			.catch(fail);
 		});
 
-		it('parses service name from a relative path with ports', function(done) {
-			system
-			.import('/base/src/sofe.js')
-			.then(function(sofe) {
-				let load = {
-					address: "https://localhost:8083/service-name/relative.js",
-					meta: {}
-				};
-				expect(sofe.getServiceName(load)).toEqual('service-name');
-				done();
-			})
-			.catch(fail);
-		});
-
-		it('parses service name from a relative path', function(done) {
-			system
-			.import('/base/src/sofe.js')
-			.then(function(sofe) {
-				let load = {
-					address: "https://localhost/service-name/relative.js",
-					meta: {}
-				};
-				expect(sofe.getServiceName(load)).toEqual('service-name');
-				done();
-			})
-			.catch(fail);
-		});
-
-		it('parses service name from a relative path with dot', function(done) {
-			system
-			.import('/base/src/sofe.js')
-			.then(function(sofe) {
-				let load = {
-					address: "https://localhost/service-name.css/relative.js",
-					meta: {}
-				};
-				expect(sofe.getServiceName(load)).toEqual('service-name.css');
-				done();
-			})
-			.catch(fail);
-		});
-
 		it('parses service name with query params', function(done) {
 			system
 			.import('/base/src/sofe.js')
@@ -165,57 +123,79 @@ describe('sofe api', () => {
 		});
 	});
 
-	describe('Relative service', function() {
-		it('resolve a service with no path', function(done) {
-			system
-			.import('/base/src/utils.js')
-			.then(function(utils) {
-				expect(
-					utils.getUrlFromService('https://localhost/someService', 'http://hi.com/someService.js')
-				).toBe('http://hi.com/someService.js')
-
-				done();
-			})
-			.catch(fail);
+	describe('getServiceUrl external API', function() {
+		afterEach(function() {
+			window.sofe.clearCache();
 		});
 
-		it('resolve a service a path', function(done) {
-			system
-			.import('/base/src/utils.js')
-			.then(function(utils) {
-				expect(
-					utils.getUrlFromService('https://localhost/someService/tester.js', 'http://hi.com/someService.js')
-				).toBe('http://hi.com/tester.js')
+		it('returns the url of a service', function(done) {
+			system.config({
+				sofe: {
+					manifest: {
+						simple: root + '/test/services/simple1.js'
+					}
+				}
+			});
 
-				done();
-			})
-			.catch(fail);
+			system
+				.import("simple!/base/src/sofe.js")
+				.then(function(auth) {
+					system
+						.import("/base/src/sofe.js")
+						.then(sofe => {
+							expect(sofe.getServiceUrl("simple")).toBe(
+								root + "/test/services/simple1.js"
+							);
+							done();
+						})
+						.catch(fail);
+				})
+				.catch(fail);
 		});
 
-		it('resolve a service a path with directories', function(done) {
-			system
-			.import('/base/src/utils.js')
-			.then(function(utils) {
-				expect(
-					utils.getUrlFromService('https://localhost/someService/dir1/dir2/tester.js', 'http://hi.com/someService.js')
-				).toBe('http://hi.com/dir1/dir2/tester.js')
+		it('returns the url of a service in local storage', function(done) {
+			system.config({
+				sofe: {
+					manifest: {
+						simple: root + '/test/services/simple1.js'
+					}
+				}
+			});
 
-				done();
-			})
-			.catch(fail);
+			window.localStorage.setItem(
+				"sofe:simple",
+				"http://localhost:9876/base/test/services/simple2.js"
+			);
+
+			system
+				.import("simple!/base/src/sofe.js")
+				.then(function(auth) {
+					system
+						.import("/base/src/sofe.js")
+						.then(sofe => {
+							expect(sofe.getServiceUrl("simple")).toBe(
+								root + "/test/services/simple2.js"
+							);
+							window.localStorage.removeItem('sofe:simple');
+							done();
+						})
+						.catch(fail);
+				})
+				.catch(fail);
 		});
 
-		it('resolve a service a path with directories on both', function(done) {
+		it("should throw an error if no service has been loaded", function(done) {
 			system
-			.import('/base/src/utils.js')
-			.then(function(utils) {
-				expect(
-					utils.getUrlFromService('https://localhost/someService/dir1/dir2/tester.js', 'http://hi.com/dir3/someService.js')
-				).toBe('http://hi.com/dir3/dir1/dir2/tester.js')
-
-				done();
-			})
-			.catch(fail);
+				.import("/base/src/sofe.js")
+				.then(sofe => {
+					expect(sofe.getServiceUrl.bind(null, "simple")).toThrow(
+						new sofe.InvalidServiceName(
+							'Service "simple" has not been loaded, import the service before getting the service URL'
+						)
+					);
+					done();
+				})
+				.catch(fail);
 		});
 	});
 });

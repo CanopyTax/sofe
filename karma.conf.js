@@ -110,7 +110,6 @@ module.exports = function(config) {
 		},
 
 		proxies: {
-			'/path-browserify': 'http://localhost:9876/base/node_modules/path-browserify/index.js'
 		}
 	})
 }

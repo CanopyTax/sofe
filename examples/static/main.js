@@ -1,4 +1,4 @@
-import auth from 'auth!sofe';
+// import auth from 'auth!sofe';
 
 document.getElementById('response')
   .textContent = JSON.stringify(

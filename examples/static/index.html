@@ -6,10 +6,10 @@
 		<title>Static Manifest</title>
 	</head>
 	<body>
-		<script src="jspm_packages/system.js"></script>
-		<script src="config.js"></script>
+		<script src="./jspm_packages/system.src.js"></script>
+		<script src="./jspm.config.js"></script>
 		<script>
-      System.import('main.js');
+      System.import('src/static.js');
 		</script>
     <h2>
       Static Manifest
@@ -24,12 +24,8 @@ System.config({
   }
 });
 
-import auth from 'auth!sofe';
+import auth from 'auth!/src/sofe.js';
 
-document.getElementById('response')
-  .textContent = JSON.stringify(
-    auth.getSession()
-  );
 </pre>
     </p>
     <p><strong>Service Response: <span id="response"></span></strong></p>

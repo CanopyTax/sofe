@@ -1,6 +1,6 @@
 {
   "name": "sofe",
-  "version": "1.5.6",
+  "version": "2.1.2",
   "description": "Service Oriented Front-end",
   "main": "dist/sofe.js",
   "scripts": {
@@ -50,14 +50,12 @@
     "rollup": "0.37.0",
     "rollup-plugin-commonjs": "6.0.0",
     "rollup-plugin-node-resolve": "2.0.0",
-    "systemjs": "^0.19.29",
+    "systemjs": "^0.20.12",
     "uglify-js": "^2.6.2"
   },
   "files": [
     "dist",
     "src"
   ],
-  "dependencies": {
-    "path-browserify": "0.0.0"
-  }
+  "dependencies": {}
 }
