@@ -49,6 +49,7 @@ export function locate(load) {
 				stepMiddleware(newMiddleware, url, function(newUrl, newMiddleware) {
 					middlewareMap[id] = newMiddleware;
 					middlewareTracker = id;
+          serviceMap[service] = newUrl;
 					resolvePromise(newUrl);
 				});
 			}
@@ -62,7 +63,6 @@ export function locate(load) {
 				window.sessionStorage.getItem(`sofe:${service}`)
 			) {
 				const url = window.sessionStorage.getItem(`sofe:${service}`);
-				serviceMap[service] = url;
 				addServiceOverride(service);
 				resolve(url);
 			} else if (
@@ -72,7 +72,6 @@ export function locate(load) {
 			) {
 				//otherwise check local storage (since it is less transient)
 				const url = window.localStorage.getItem(`sofe:${service}`);
-				serviceMap[service] = url;
 				addServiceOverride(service);
 				resolve(url);
 			} else {
@@ -82,12 +81,10 @@ export function locate(load) {
 						// First try and resolve the service with the manifest,
 						// otherwise resolve by requesting the registry
 						if (manifest && manifest[service]) {
-							serviceMap[service] = manifest[service];
 							resolve(manifest[service]);
 						} else {
 							getUrlFromRegistry(service, config)
 								.then(url => {
-									serviceMap[service] = url;
 									resolve(url);
 								})
 								.catch(error => {

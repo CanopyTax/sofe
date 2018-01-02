@@ -153,6 +153,38 @@ describe('sofe api', () => {
 				.catch(fail);
 		});
 
+		it('Should getServiceUrl with middleware applied', function(run) {
+			system.config({
+				sofe: {
+					manifest: {
+						simple: root + '/test/services/translate.js',
+					}
+				}
+			});
+
+			system.import('/base/src/sofe.js')
+				.then(function(sofe) {
+					sofe.applyMiddleware(() => (preLocateLoad, preLocate) => {
+						preLocate(preLocateLoad);
+            return (postLocateLoad, postLocateNext) => postLocateNext(
+              root + '/test/services/simple1.js'
+            )
+					})
+
+					Promise.all([
+						system.import('simple!/base/src/sofe.js'),
+					]).then((all) => {
+            expect()
+						expect(all[0]()).toBe('mumtaz');
+            expect(sofe.getServiceUrl("simple")).toBe(root + '/test/services/simple1.js');
+						run();
+					})
+					.catch(fail);
+
+				})
+				.catch(fail);
+		});
+
 		it('returns the url of a service in local storage', function(done) {
 			system.config({
 				sofe: {
