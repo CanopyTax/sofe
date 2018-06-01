@@ -4,7 +4,7 @@ import { getAllManifests as _getAllManifests } from "./manifest.js";
 import { getManifest as _getManifest } from "./manifest.js";
 
 export function getAllManifests() {
-  return _getAllManifests(System.sofe || {});
+  return _getAllManifests(SystemJS.sofe || {});
 }
 
 export function applyMiddleware(...middleware) {

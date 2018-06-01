@@ -33,3 +33,5 @@ examples/static/jspm_packages
 
 examples/remote/node_modules
 examples/static/node_modules
+
+.DS_Store
