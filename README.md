@@ -1,3 +1,7 @@
+# Project status
+
+**Sofe is a plugin for systemjs@0.21, but the latest version of systemjs is >3. The [new versions of systemjs](https://github.com/systemjs/systemjs) have the equivalent of sofe built into systemjs itself, via [import maps](https://github.com/WICG/import-maps). Because of this, we encourage that you use systemjs@>=3 + import maps, instead of using systemjs@0.21 + sofe. See [this file](https://gitlab.com/TheMcMurder/single-spa-portal-example/blob/master/src/index.html#L10) for an example of what the new alternative looks like.**
+
 # sofe
 Service Oriented Front-end - Sofe is a [SystemJS](https://github.com/systemjs/systemjs) plugin that resolves a module name to a fully qualified url at runtime.
 
