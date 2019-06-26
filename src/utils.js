@@ -16,21 +16,9 @@ export function getServiceName(obj) {
     throw new Error(`getServiceName must be called with a string url or with a SystemJS load object that has an address`);
   }
 
-  const windowPath = hasWindow
-    ? window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1)
-    : '';
+  const path = removeBang(address);
 
-  // The service name might have a path in it!
-  // For example, you might `import a from 'service/a/path.js!sofe';`
-  // In that case, we want `getServiceName` to return just `'sesrvice'`;
-  let urlParts = getRegex().exec(address);
-  const servicePath = urlParts[5];
-
-  const splits = servicePath.substring(windowPath.length).split('/');
-
-  // There might be a leading `/`, if so `splits[0]` is empty and
-  // we want to get the second element of the array.
-  return removeBang(splits[0] || splits[1]);
+  return path.substring(path.lastIndexOf('/')+1);
 }
 
 function removeBang(url) {
