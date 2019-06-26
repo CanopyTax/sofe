@@ -94,33 +94,6 @@ describe('sofe api', () => {
       .catch(fail);
     });
 
-    it('parses service name with query params', function(done) {
-      system
-      .import('/base/src/sofe.js')
-      .then(function(sofe) {
-        let load = {
-          address: "https://localhost/service-name/relative.js?something=wow",
-          meta: {}
-        };
-        expect(sofe.getServiceName(load)).toEqual('service-name');
-        done();
-      })
-      .catch(fail);
-    });
-
-    it('parses service name with hash', function(done) {
-      system
-      .import('/base/src/sofe.js')
-      .then(function(sofe) {
-        let load = {
-          address: "https://localhost/service-name/relative.js#/something",
-          meta: {}
-        };
-        expect(sofe.getServiceName(load)).toEqual('service-name');
-        done();
-      })
-      .catch(fail);
-    });
   });
 
   describe('getServiceUrl external API', function() {
